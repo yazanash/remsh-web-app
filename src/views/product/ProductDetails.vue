@@ -6,13 +6,13 @@ import {ref,reactive,onMounted} from 'vue';
 import productItem from '@/components/product/productItem.vue'
 import { useRoute } from 'vue-router';
 
-import { useProductStore } from '@/stores/product';
+import { useProductDataStore } from '@/stores/product_data';
 
 import ProductInfo from '@/components/product/ProductInfo.vue';
 import ProductImages from '@/components/product/ProductImages.vue';
 const router = useRoute();
 const productId = router.params.id;
-const productStore = useProductStore();
+const productDataStore = useProductDataStore();
 
 
 const item_form = reactive({
@@ -25,7 +25,7 @@ const item_form = reactive({
 
 const handleAddItem = async () => {
   try {
-    await productStore.addItem(productId,item_form);
+    await productDataStore.addItem(productId,item_form);
     item_form.size = '';
   } catch (err) {
     console.error('Error adding product:', err);
@@ -33,18 +33,19 @@ const handleAddItem = async () => {
 };
 
 
+
 onMounted(async() => { 
     console.log("mounted")
-  await productStore.fetchProductById(productId); // Fetch product info
+  await productDataStore.fetchProductById(productId); // Fetch product info
 });
 </script>
 
 <template>
-    <div v-if="productStore.loading">Loading...</div>
-<div v-if="productStore.error">{{ productStore.error }}</div>
-    <main v-if="!productStore.loading && !productStore.error" class="container p-3 ">
-        <ProductInfo :info="productStore.product?.info"/>
-        <ProductImages :id="productStore.product?.info.id" :images="productStore.product?.images"/>
+    <div v-if="productDataStore.loading">Loading...</div>
+<div v-if="productDataStore.error">{{ productDataStore.error }}</div>
+    <main v-if="!productDataStore.loading && !productDataStore.error" class="container p-3 ">
+        <ProductInfo :info="productDataStore.product?.info"/>
+        <ProductImages :id="productDataStore.product?.info.id" :images="productDataStore.product?.images"/>
     
         <div class="row">
             <div class="d-flex flex-row justify-content-between">
@@ -65,7 +66,10 @@ onMounted(async() => {
                     </div>
                 </div>
                 <div class="col">
-                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button :disabled="productDataStore.itemloading" type="submit" class="btn btn-primary">
+                        <span v-if="productDataStore.itemloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Add
+                    </button>
                 </div>
             </form>
                 <div class="col-md-12 col-sm-12">
@@ -77,10 +81,11 @@ onMounted(async() => {
                             <th scope="col">Size</th>
                             <th scope="col">Color</th>
                             <th scope="col">Active</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <productItem v-for="item in productStore.product?.items" :key="item.id" :item="item"></productItem>
+                        <productItem v-for="item in productDataStore.product?.items" :key="item.id" :id="item?.id" :item="item"></productItem>
                     </tbody>
                 </table>
             </div>

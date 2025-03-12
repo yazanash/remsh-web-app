@@ -2,8 +2,8 @@
 import * as bootstrap from "bootstrap";
 import {ref,reactive,onMounted} from 'vue';
 import imgPlaceholder from '@/assets/images/img-placeholder.jpeg'
-import { useProductStore } from '@/stores/product';
-const productStore = useProductStore();
+import { useProductDataStore } from "@/stores/product_data";
+const productDataStore = useProductDataStore();
 const props = defineProps({
     images: Object,
     id:Object
@@ -49,15 +49,16 @@ const openModal = (mode, image = null) => {
 const handleAddImage = async () => {
   try {
         if (isEditing.value) {
-            await productStore.editImage(productId,form);
+            await productDataStore.editImage(productId,form);
         } else {
-            await productStore.addImage(productId,form);
+            await productDataStore.addImage(productId,form);
         }
     
     form.image = null;
     imagePreview.value = form.image;
     const modalElement = document.getElementById('categoryModal');
     const modal = bootstrap.Modal.getInstance(modalElement); // Get the modal instance
+    console.log(modal)
     if (modal) {
       modal.hide(); // Hide the modal
   }
@@ -68,7 +69,7 @@ const handleAddImage = async () => {
 };
 const handleDeleteImage = async () => {
   try {
-    await productStore.deleteImage(form.id);
+    await productDataStore.deleteImage(form.id);
     form.image = null;
     form.id = null;
     imagePreview.value = form.image;
@@ -116,12 +117,17 @@ const handleDeleteImage = async () => {
                
                 />
                 <div class="d-flex flex-row  justify-content-around">
-                    <a  @click="triggerFileInput" class="btn btn-primary mx-2" >select image</a>
+                    <a  @click="triggerFileInput" class="btn btn-primary mx-2" :class="{'disabled':productDataStore.imageloading || productDataStore.imagedeleteloading}" >select image</a>
                
-                    <button type="submit" class="btn btn-primary">
-                        {{ isEditing.value ? 'Update' : 'Save' }}
+                    <button  :disabled="productDataStore.imageloading||productDataStore.imagedeleteloading" type="submit" class="btn btn-primary">
+                      <span v-if="productDataStore.imageloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      {{ isEditing.value ? 'Update' : 'Save' }}
                     </button>
-                    <a  v-if="isEditing.value" @click="handleDeleteImage" class="btn btn-danger mx-2" ><i class="pi pi-trash"></i></a>
+
+                    <a  v-if="isEditing.value" :class="{'disabled':productDataStore.imageloading || productDataStore.imagedeleteloading}" @click="handleDeleteImage" class="btn btn-danger mx-2" >
+                      <span v-if="productDataStore.imagedeleteloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      <i v-else class="pi pi-trash"></i>
+                    </a>
                 </div>
                
             </div>
