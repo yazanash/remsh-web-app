@@ -28,6 +28,9 @@ const props = defineProps({
             <h4>{{ info?.name }}</h4>
             <p class="card-text"><strong > {{ info?.category }}</strong> </p>
             <p class="card-text">{{ info?.description }} </p>
+            <RouterLink :to="`/products/edit/${info?.id}`" class="btn btn-info">
+                Edit
+            </RouterLink>
         </section>
       
        

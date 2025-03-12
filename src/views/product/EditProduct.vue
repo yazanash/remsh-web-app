@@ -4,6 +4,9 @@ import imgPlaceholder from '@/assets/images/img-placeholder.jpeg'
 import { reactive, onMounted } from 'vue';
 import { useProductStore } from '@/stores/product';
 import { useRoute } from 'vue-router';
+import { useProductDataStore } from '@/stores/product_data';
+import myrouter from "@/router";
+const productDataStore = useProductDataStore();
 const router = useRoute();
 const productId = router.params.id;
 const imagePreview = ref(null);
@@ -33,36 +36,32 @@ const form = reactive({
 });
 const handleAddProduct = async () => {
   try {
-    await productStore.addProduct(form);
-    // router.push('/products/'+id);
-    // form.name = '';
-    // form.price = 0;
-    // form.offer = 0;
-    // form.description = '';
-    // form.thumbnail = null;
+   await productStore.editProduct(productId,form);
+   myrouter.push('/products/'+productId);
   } catch (err) {
     console.error('Error adding product:', err);
   }
 };
 onMounted(async () => {
-  productStore.fetchCategories(); // Fetch categories when the component is mounted
-  await productStore.fetchProductById(productId); // Fetch product info
-  form.name= productStore.product?.info.name;
-  const category = productStore.categories.find((item) => item.name === productStore.product?.info.category_name); // Find the item
+  await productStore.fetchCategories(); // Fetch categories when the component is mounted
+  await productDataStore.fetchProductById(productId); // Fetch product info
+  form.name= productDataStore.product?.info.name;
+  const category = productStore.categories.find((item) => item.name === productDataStore.product?.info.category_name); // Find the item
 //   console.log(productStore.categories)
 //   console.log(productStore.product?.info)
   form.category= category.id;
-  form.price=  productStore.product?.info.price;
-  form.offer= productStore.product?.info.offer;
-  form.description=  productStore.product?.info.description;
-  form.thumbnail=  productStore.product?.info.thumbnail;
-  imagePreview.value=form.thumbnail;
+  form.price=  productDataStore.product?.info.price;
+  form.offer= productDataStore.product?.info.offer;
+  form.description=  productDataStore.product?.info.description;
+  imagePreview.value=  productDataStore.product?.info.thumbnail;
 });
 const productStore = useProductStore();
 </script>
 
 <template>
-    <div class="container my-3">
+    <div v-if="productDataStore.loading||productStore.loading">Loading...</div>
+    <div v-if="productDataStore.error||productStore.loading">{{ productDataStore.error }}</div>
+    <div v-if="!productDataStore.loading && !productDataStore.error&&!productStore.loading" class="container my-3">
     <h2 class="text-center mb-4">Edit Product</h2>
     <form class="row " @submit.prevent="handleAddProduct">
         <div class="col-3 d-flex flex-column justify-content-start align-items-center">

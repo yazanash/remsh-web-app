@@ -7,18 +7,51 @@ export const useProductStore = defineStore('products', {
     products: [], // Array to hold the product list
     categories: [],
     product: null,
-    loading: false, // Flag for loading state
-    error: null, // For error messages
+    loading: false,
+    error: null, 
+    pagination: {
+      next: null,    // Next page URL
+      previous: null, // Previous page URL
+    },
   }),
   actions: {
-    async fetchProducts() {
+    async fetchProducts(filters=null,operation=null) {
       this.loading = true;
       this.error = null;
       try {
-        const response = await axiosInstance.get('/api/products/'); // Adjust the endpoint to match your API
-        this.products = response.data.data; // Assume API returns the product list in `response.data`
+        const filter = {
+          params: {},
+        };
+        if(filters){
+          if (filters.category) {
+            filter.params.category = filters.category;
+          }
+          
+          if (filters.search) {
+            filter.params.keyword = filters.search;
+          }
+          
+          if (filters.keyword) {
+            filter.params.keyword = filters.keyword; // For keyword-based filtering
+          }
+          if(operation){
+            if(this.pagination.next!==null&&operation==='next'){
+              filter.params.page =this.pagination.next
+            }
+            else if (this.pagination.previous!==null&&operation==='previous'){
+              filter.params.page =this.pagination.previous
+            }
+          }
+        }
+       
+       
+        const response = await axiosInstance.get('/api/products/',filter); // Adjust the endpoint to match your API
+        this.products = response.data.data; // Assume API returns the product list in `response.data
+        console.log( response.data)
+        this.pagination.next = response.data.next_page;
+        this.pagination.previous = response.data.previous_page;
       } catch (err) {
-        console.error(err);
+        console.log(err);
         this.error = 'Failed to load products.';
       } finally {
         this.loading = false;
@@ -26,11 +59,16 @@ export const useProductStore = defineStore('products', {
     },
     async fetchCategories() {
         try {
+          this.loading=true;
           const response = await axiosInstance.get('/api/categories/'); // Replace with category endpoint
           this.categories = response.data.data;
+         
         } catch (err) {
           console.error(err);
           this.error = 'Failed to load categories.';
+        }
+        finally{
+          this.loading=false;
         }
       },
     async addProduct(productData) {
@@ -52,108 +90,42 @@ export const useProductStore = defineStore('products', {
               'Content-Type': 'multipart/form-data',
             },
           });
-          this.products.push(response.data);
+          this.products.push(response.data.data);
+          console.log(response.data.data)
+          return response.data.data.id
         } catch (err) {
-          console.error(err);
+          console.log(err);
           this.error = 'Failed to add the product.';
         } finally {
           this.loading = false;
         }
     },
-    async fetchProductById(id) {
-      this.loading = true;
-      this.error = null;
-
-      try {
-        const response = await axiosInstance.get('/api/products/'+id+'/'); // API endpoint for fetching product
-        
-        this.product = response.data.data; // Assign the fetched product to the state
-      } catch (err) {
-        console.error(err);
-        this.error = 'Failed to load product details.';
-      } finally {
-        this.loading = false;
-      }
-    },
-    async addImage(product_id,imageData) {
+    async editProduct(product_id,productData) {
       this.loading = true;
       this.error = null;
       try {
         const formData = new FormData();
-        if (imageData.image) {
-          formData.append('image_url', imageData.image);
-          formData.append('product', product_id);
+        formData.append('name', productData.name);
+        formData.append('category', productData.category);
+        formData.append('offer', productData.offer);
+        formData.append('price', productData.price);
+        formData.append('description', productData.description);
+        if (productData.thumbnail) {
+          formData.append('thumbnail', productData.thumbnail);
         }
         
-        const response = await axiosInstance.post('/api/products/images/add/', formData, {
+        const response = await axiosInstance.put('/api/products/'+product_id+'/edit/', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log(response.data)
-        this.product.images.push(response.data.data);
+        
       } catch (err) {
-        console.error(err);
-        this.error = 'Failed to add the image.';
+        console.log(err);
+        this.error = 'Failed to add the product.';
       } finally {
         this.loading = false;
       }
   },
-  async editImage(product_id,imageData) {
-    this.loading = true;
-    this.error = null;
-    try {
-      const formData = new FormData();
-      if (imageData.image) {
-        formData.append('image_url', imageData.image);
-        formData.append('product', product_id);
-      }
-      
-      const response = await axiosInstance.put('/api/products/images/edit/'+imageData.id+'/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      // data = ;
-      console.log(response.data.data)
-      const itemToUpdate = this.product.images.find((item) => item.id === response.data.data.id); // Find the item
-  if (itemToUpdate) {
-    itemToUpdate.image_url = response.data.data.image_url; // Update its property
-  }
-    } catch (err) {
-      console.log(err);
-      this.error = 'Failed to add the image.';
-    } finally {
-      this.loading = false;
-    }
-},
-async deleteImage(imageId) {
-  this.loading = true;
-  this.error = null;
-  try {
-    const response = await axiosInstance.delete('/api/products/images/delete/'+imageId+'/');
-    this.product.images = this.product.images.filter((item) => item.id !== imageId);
-  } catch (err) {
-    console.log(err);
-    this.error = 'Failed to add the image.';
-  } finally {
-    this.loading = false;
-  }
-},
-async addItem(product_id,formData) {
-  this.loading = true;
-  this.error = null;
-  try {
-    const response = await axiosInstance.post('/api/products/'+product_id+'/items/add/', formData);
-    console.log(response.data)
-    this.product.items.push(response.data.data);
-  } catch (err) {
-    console.error(err);
-    this.error = 'Failed to add the image.';
-  } finally {
-    this.loading = false;
-  }
-},
-
   },
 });

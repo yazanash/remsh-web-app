@@ -7,7 +7,7 @@ import router from "@/router";
 
 const imagePreview = ref(null);
 const fileInput = ref(null);
-  
+const id = ref(null)
 const triggerFileInput = () => {
       fileInput.value.click();
     };
@@ -32,13 +32,12 @@ const form = reactive({
 });
 const handleAddProduct = async () => {
   try {
-    await productStore.addProduct(form);
-    // router.push('/products/'+id);
-    // form.name = '';
-    // form.price = 0;
-    // form.offer = 0;
-    // form.description = '';
-    // form.thumbnail = null;
+   id.value = await productStore.addProduct(form);
+    console.log(id.value)
+    if(id.value){
+    router.push('/products/'+id.value);
+
+    }
   } catch (err) {
     console.error('Error adding product:', err);
   }

@@ -1,8 +1,26 @@
 <script setup>
 import { defineProps, ref, computed } from 'vue';
+import { useProductDataStore } from "@/stores/product_data";
+const productDataStore = useProductDataStore();
 const props = defineProps({
     item: Object,
+    id:Object
 });
+const itemId = props.id
+const isloading =ref(false)
+
+const handleDeleteItem = async () => {
+  try {
+    isloading.value=true;
+    await productDataStore.deleteItem(itemId);
+  } catch (err) {
+    console.error('Error adding product:', err);
+  }
+  finally{
+    isloading.value=false;
+  }
+};
+
 </script>
 <template>
         <tr >
@@ -16,6 +34,12 @@ const props = defineProps({
                         Active
                     </label>
                 </div>
+            </td>
+            <td>
+                <button :disabled="isloading||productDataStore.itemdeleteloading" @click="handleDeleteItem" type="submit" class="btn btn-danger">
+                        <span v-if="isloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <i v-else class="pi pi-trash"></i>
+                </button>
             </td>
         </tr>
 </template>
