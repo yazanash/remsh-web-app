@@ -1,18 +1,13 @@
 <script setup>
 import { ref,reactive } from 'vue';
 import * as bootstrap from "bootstrap";
-const items=[
-    {id:1,name:"Category name 1"},
-    {id:2,name:"Category name 2"},
-    {id:3,name:"Category name 3"},
-    {id:4,name:"Category name 4"},
-    {id:5,name:"Category name 5"},
-    {id:6,name:"Category name 6"},
-    {id:7,name:"Category name 7"},
+import { useCategoryStore } from '@/stores/category';
+import { onMounted } from 'vue';
 
-]
+const categoryStore = useCategoryStore();
 const form = reactive({
     name:'',
+    id:null
 });
 
 const isEditing = reactive({ value: false });
@@ -20,29 +15,28 @@ const openModal = (mode, category = null) => {
   isEditing.value = mode === "edit";
   if (isEditing.value && category) {
     form.name = category.name;
+    form.id = category.id;
   } else {
     form.name = "";
+    form.id = null;
   }
   const modal = new bootstrap.Modal(document.getElementById("categoryModal"));
   modal.show();
 };
 
-const handleSubmit = () => {
-  if (isEditing.value) {
-    const index = categories.findIndex(cat => cat.id === form.id);
-    if (index !== -1) {
-      categories[index].name = form.name;
-      categories[index].description = form.description;
-    }
-  } else {
-    categories.push({
-      ...form,
-      id: Date.now(), // Generate a unique ID
-    });
+const handleSubmit =async () => {
+  if (isEditing.value && form.id) {
+    await categoryStore.editCategory(form.id,form);
+  }
+  else{
+    await categoryStore.addCategory(form)
   }
   const modal = bootstrap.Modal.getInstance(document.getElementById("categoryModal"));
   modal.hide();
 };
+onMounted(async () => {
+  await categoryStore.fetchCategories(); // Fetch products when the component is mounted
+});
 </script>
 <template>
 <div class="container p-3">
@@ -63,9 +57,10 @@ const handleSubmit = () => {
             <form @submit.prevent="handleSubmit">
                 <div class="col-md-6 mb-3">
                     <label for="productName" class="form-label">Category</label>
-                    <input type="text" v-model="form.name" class="form-control" id="productName" placeholder="Enter coupon code" required>
+                    <input type="text" v-model="form.name" class="form-control" id="productName" placeholder="Enter category name" required>
                 </div>
-              <button type="submit" class="btn btn-primary">
+              <button :disabled="categoryStore.loadingoperation" type="submit" class="btn btn-primary">
+                <span v-if="categoryStore.loadingoperation" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 {{ isEditing.value ? 'Update' : 'Save' }}
               </button>
             </form>
@@ -73,16 +68,19 @@ const handleSubmit = () => {
         </div>
       </div>
     </div>
-        <div class="border table-responsive rounded p-1">
+    <div v-if="categoryStore.loading">Loading...</div>
+    <div v-if="categoryStore.error">{{ categoryStore.error }}</div>
+        <div v-if="!categoryStore.loading && !categoryStore.error" class="border table-responsive rounded p-1">
                 <table class="table ">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Name </th>
+                            <th scope="col">Actions </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in items" :key="item.id">
+                        <tr v-for="item in categoryStore.categories" :key="item.id">
                             <th scope="row">{{item.id}}</th>
                             <td>{{item.name}}</td>
                             <td>

@@ -1,18 +1,11 @@
 <script setup>
 import { ref,reactive } from 'vue';
 import * as bootstrap from "bootstrap";
-const items=[
-    {id:1,name:"Delivery 1",address:"swaida syria souk swaida"},
-    {id:2,name:"Delivery 2",address:"swaida syria souk swaida"},
-    {id:3,name:"Delivery 3",address:"swaida syria souk swaida"},
-    {id:4,name:"Delivery 4",address:"swaida syria souk swaida"},
-    {id:5,name:"Delivery 5",address:"swaida syria souk swaida"},
-    {id:6,name:"Delivery 6",address:"swaida syria souk swaida"},
-    {id:7,name:"Delivery 7",address:"swaida syria souk swaida"},
-
-]
-
+import { onMounted } from 'vue';
+import { useDeliveryStore } from '@/stores/delivery';
+const deliveryStore = useDeliveryStore();
 const form = reactive({
+    id:'',
     name: '',
     address: '',
 });
@@ -21,9 +14,11 @@ const isEditing = reactive({ value: false });
 const openModal = (mode, delivery = null) => {
   isEditing.value = mode === "edit";
   if (isEditing.value && delivery) {
+    form.id = delivery.id;
     form.name = delivery.name;
     form.address = delivery.address;
   } else {
+    form.id='';
     form.name = "";
     form.address = "";
   }
@@ -31,22 +26,22 @@ const openModal = (mode, delivery = null) => {
   modal.show();
 };
 
-const handleSubmit = () => {
-  if (isEditing.value) {
-    const index = categories.findIndex(cat => cat.id === form.id);
-    if (index !== -1) {
-      categories[index].name = form.name;
-      categories[index].description = form.description;
-    }
-  } else {
-    categories.push({
-      ...form,
-      id: Date.now(), // Generate a unique ID
-    });
+const handleSubmit = async() => {
+  if (isEditing.value && form.id) {
+    await deliveryStore.editDelivery(form.id,form);
   }
+  else{
+    await deliveryStore.addDelivery(form)
+  }
+    form.id='';
+    form.name = "";
+    form.address = "";
   const modal = bootstrap.Modal.getInstance(document.getElementById("categoryModal"));
   modal.hide();
 };
+onMounted(async () => {
+  await deliveryStore.fetchDelivery(); 
+});
 </script>
 <template>
 <div class="container p-3">
@@ -75,6 +70,7 @@ const handleSubmit = () => {
                 <input type="text" class="form-control" id="address" v-model="form.address" required>
               </div>
               <button type="submit" class="btn btn-primary">
+                <span v-if="deliveryStore.loadingoperation" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 {{ isEditing.value ? 'Update' : 'Save' }}
               </button>
             </form>
@@ -82,17 +78,20 @@ const handleSubmit = () => {
         </div>
       </div>
     </div>
-        <div class="border table-responsive rounded p-1">
+    <div v-if="deliveryStore.loading">Loading...</div>
+    <div v-if="deliveryStore.error">{{ deliveryStore.error }}</div>
+        <div v-if="!deliveryStore.loading && !deliveryStore.error" class="border table-responsive rounded p-1">
                 <table class="table ">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Name </th>
                             <th scope="col">Address </th>
+                            <th scope="col">Actions </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in items" :key="item.id">
+                        <tr v-for="item in deliveryStore.deliveries" :key="item.id">
                             <th scope="row">{{item.id}}</th>
                             <td>{{item.name}}</td>
                             <td>{{item.address}}</td>
