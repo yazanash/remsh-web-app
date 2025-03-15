@@ -3,7 +3,6 @@ import { useAuthStore } from '@/stores/auth';
 
 const axiosInstance = axios.create({
   baseURL: '/api', // Use '/api' to take advantage of the Vite proxy
-  timeout: 10000, // Optional timeout setting
 });
 axiosInstance.interceptors.request.use((config) => {
   const authStore = useAuthStore();
@@ -17,7 +16,7 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.log(response.response)
+    console.log(error)
     if (error.response.status === 401 && error.config && !error.config._retry) {
       error.config._retry = true;
       

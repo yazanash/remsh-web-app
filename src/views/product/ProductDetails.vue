@@ -35,7 +35,6 @@ const handleAddItem = async () => {
 
 
 onMounted(async() => { 
-    console.log("mounted")
   await productDataStore.fetchProductById(productId); // Fetch product info
 });
 </script>
