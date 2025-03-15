@@ -4,7 +4,7 @@ import { useProductDataStore } from "@/stores/product_data";
 const productDataStore = useProductDataStore();
 const props = defineProps({
     item: Object,
-    id:Object
+    id:Number
 });
 const itemId = props.id
 const isloading =ref(false)

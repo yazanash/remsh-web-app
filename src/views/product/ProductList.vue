@@ -54,7 +54,7 @@ onMounted(async () => {
         <div class="col-6">
             <div class="d-flex">
                 <div class="input-group mb-3">
-                    <input @input="handleSearch" v-model="form.search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+                    <input  v-model="form.search" class="form-control" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-primary"  type="submit"><i class="pi pi-search"></i></button>
                 </div>
             </div>

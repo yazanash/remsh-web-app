@@ -1,17 +1,30 @@
 <script setup>
 import OrderItem from '@/components/order/OrderItem.vue';
-const orders=[
-    {id:1,customer:"john doe",status:"PR",delivery:"damascus, bagdad street alkadmous",items:5,total:3000},
-    {id:2,customer:"JEAN doe",status:"P",delivery:"SWAIDA, teshreen street alkadmous",items:5,total:3000},
-    {id:3,customer:"ALMA doe",status:"D",delivery:"damascus, bagdad street alkadmous",items:5,total:3000},
-    {id:4,customer:"RAMI doe",status:"S",delivery:"damascus, bagdad street alkadmous",items:5,total:3000},
-    {id:5,customer:"AHMAD doe",status:"C",delivery:"damascus, bagdad street alkadmous",items:5,total:3000},
-    {id:6,customer:"YOUSEF doe",status:"C",delivery:"damascus, bagdad street alkadmous",items:5,total:3000},
-    {id:7,customer:"MOHAMMED doe",status:"S",delivery:"damascus, bagdad street alkadmous",items:5,total:3000},
-    {id:8,customer:"MONEER doe",status:"S",delivery:"damascus, bagdad street alkadmous",items:5,total:3000},
-    {id:9,customer:"SAMER doe",status:"S",delivery:"damascus, bagdad street alkadmous",items:5,total:3000},
-]
+import { reactive, ref, computed } from 'vue';
+import { onMounted } from 'vue';
+import { useOrderStore } from '@/stores/order';
 
+const orderStore = useOrderStore();
+
+const form = reactive({
+  search: null,
+  status:null,
+});
+
+const handleProductsFilter =async()=>{
+    await orderStore.fetchOrders(form);
+}
+const handleProductsPages =async(operation =null)=>{
+    await orderStore.fetchOrders(form,operation);
+}
+const handleClear = async() => {
+      form.search=null;
+      form.status=null
+        await orderStore.fetchOrders(form);
+    };
+onMounted(async () => {
+  await orderStore.fetchOrders(); // Fetch products when the component is mounted
+});
 </script>
 
 <template>
@@ -21,32 +34,43 @@ const orders=[
     </div>
     
 <hr/>
-    <div class="row g-3 my-1">
+    <form @submit.prevent="handleProductsFilter" class="row g-3 my-1">
         <div class="col-4 ">
                 <div class="input-group">
                     <div class="input-group-text"><i class="pi pi-filter"></i></div>
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected>Status</option>
-                        <option value="1">Processing</option>
-                        <option value="2">Pending</option>
-                        <option value="3">Deleverd</option>
-                        <option value="3">Shipped</option>
+                    <select v-model="form.status" class="form-select" aria-label="Default select example">
+                        <option :selected="true" :value="null">Status</option>
+                        <option value="P">Pending</option>
+                        <option value="PR">Processing</option>
+                        <option value="S">Shipped</option>
+                        <option value="D">Deliverd</option>
+                        <option value="C">Canceled</option>
                     </select>
                 </div>
               
         </div>
-        <div class="col-8">
-            <form class="d-flex">
+        <div class="col-6">
+            <div class="d-flex">
                 <div class="input-group mb-3">
-                    <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                    <input class="form-control" v-model="form.search" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-primary"  type="submit"><i class="pi pi-search"></i></button>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
-<div class="row">
+        <div class="col-2">
+            <div class="d-flex">
+                <div class="input-group mb-3">
+                     <a class="btn btn-primary" @click="handleClear" :class="{'disabled':!form.category&&!form.search}" type="submit">Clear</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div v-if="orderStore.loading">Loading...</div>
+    <div v-if="orderStore.error">{{ orderStore.error }}</div>
+<div v-if="!orderStore.loading && !orderStore.error"  class="row">
             <div class="col-md-12 col-sm-12">
                 <div class="border table-responsive rounded p-1">
+                    
                 <table class="table ">
                     <thead>
                         <tr>
@@ -59,9 +83,14 @@ const orders=[
                         </tr>
                     </thead>
                     <tbody>
-                        <OrderItem v-for="order in orders" :key="order.id" :order="order"/>
+                        <OrderItem v-for="order in orderStore.orders" :key="order.id" :order="order"/>
                     </tbody>
                 </table>
+                <div class="d-flex flex-row justify-content-center align-items-center">
+                    <button @click="handleOrderssPages('previous')" :disabled="!orderStore.pagination.previous" class="btn btn-primary mx-1">Previous</button>
+                    <button @click="handleOrderssPages('next')" :disabled="!orderStore.pagination.next" class="btn btn-primary mx-1">Next</button>
+                </div>
+                
             </div>
             </div>
         </div>

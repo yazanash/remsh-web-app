@@ -1,18 +1,13 @@
 <script setup>
 import { ref,reactive } from 'vue';
 import * as bootstrap from "bootstrap";
-const items=[
-    {id:1,code:"code10",percent:10,expire:'11-01-2025',count:10},
-    {id:2,code:"code20",percent:20,expire:'11-02-2025',count:20},
-    {id:3,code:"code30",percent:30,expire:'11-03-2025',count:30},
-    {id:4,code:"code40",percent:40,expire:'11-04-2025',count:40},
-    {id:5,code:"code50",percent:50,expire:'11-05-2025',count:50},
-    {id:6,code:"code60",percent:60,expire:'11-06-2025',count:60},
-    {id:7,code:"code70",percent:70,expire:'11-07-2025',count:70},
-
-]
+import { onMounted } from 'vue';
+import { useCouponStore } from '@/stores/coupon';
+import { formatDistanceToNow, parseISO } from "date-fns";
+const couponStore = useCouponStore();
 
 const form = reactive({
+    id:'',
     code:'',
     percent:0,
     expire:'',
@@ -25,8 +20,11 @@ const openModal = (mode, coupon = null) => {
   if (isEditing.value && coupon) {
     form.code = coupon.code;
     form.percent = coupon.percent;
-    form.expire = coupon.expire;
+    const initialDate = new Date(coupon.expire);
+    form.expire = initialDate.toISOString().slice(0, 16);
+    
     form.count = coupon.count;
+    form.id = coupon.id;
   } else {
     form.code = "";
     form.percent = "";
@@ -37,22 +35,32 @@ const openModal = (mode, coupon = null) => {
   modal.show();
 };
 
-const handleSubmit = () => {
-  if (isEditing.value) {
-    const index = categories.findIndex(cat => cat.id === form.id);
-    if (index !== -1) {
-      categories[index].name = form.name;
-      categories[index].description = form.description;
-    }
-  } else {
-    categories.push({
-      ...form,
-      id: Date.now(), // Generate a unique ID
-    });
+const handleSubmit =async () => {
+  
+  if (isEditing.value && form.id) {
+    await couponStore.editCoupon(form.id,form);
   }
+  else{
+    await couponStore.addCoupon(form)
+  }
+  form.id = null;
+  form.code = "";
+  form.percent = "";
+  form.expire = '';
+  form.count = '';
   const modal = bootstrap.Modal.getInstance(document.getElementById("categoryModal"));
   modal.hide();
 };
+const formatDate=(isoDate) =>{
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const localDate = new Date(isoDate).toLocaleString("en-US", { timeZone: userTimeZone });
+
+  return formatDistanceToNow(new Date(localDate), { addSuffix: true });
+    };
+onMounted(async () => {
+  await couponStore.fetchCoupons(); // Fetch products when the component is mounted
+});
 </script>
 <template>
 <div class="container p-3">
@@ -77,17 +85,18 @@ const handleSubmit = () => {
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="productName" class="form-label">Percent</label>
-                    <input type="text" v-model="form.percent" class="form-control" id="productName" placeholder="Enter coupon percent %" required>
+                    <input type="number" v-model="form.percent" class="form-control" id="productName" placeholder="Enter coupon percent %" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="productName" class="form-label">ExpireDate</label>
-                    <input type="date" v-model="form.expire" class="form-control" id="productName" placeholder="Enter coupon expire date" required>
+                    <input type="datetime-local" v-model="form.expire" class="form-control" id="productName" placeholder="Enter coupon expire date" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="productName" class="form-label">Count</label>
                     <input type="number" v-model="form.count" class="form-control" id="productName" placeholder="leave it blank if the coupon unlimited" required>
                 </div>
               <button type="submit" class="btn btn-primary">
+                <span v-if="couponStore.loadingoperation" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 {{ isEditing.value ? 'Update' : 'Save' }}
               </button>
             </form>
@@ -95,8 +104,9 @@ const handleSubmit = () => {
         </div>
       </div>
     </div>
-    
-        <div class="border table-responsive rounded p-1">
+    <div v-if="couponStore.loading">Loading...</div>
+    <div v-if="couponStore.error">{{ couponStore.error }}</div>
+        <div v-if="!couponStore.loading && !couponStore.error" class="border table-responsive rounded p-1">
                 <table class="table ">
                     <thead>
                         <tr>
@@ -108,12 +118,13 @@ const handleSubmit = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in items" :key="item.id">
+                        <tr v-for="item in couponStore.coupons" :key="item.id">
                             <th scope="row">{{item.id}}</th>
                             <td>{{item.code}}</td>
-                            <td>{{item.percent}}</td>
-                            <td>{{item.expire}}</td>
-                            <td>{{item.count}}</td>
+                            <td>{{item.percent}} %</td>
+                            <td>{{formatDate(item.expire)}}</td>
+                            <td v-if="item.count>=0"> {{item.count}}</td>
+                            <td v-else>غير محدود</td>
                             <td>
                                 <a class="btn btn-primary"   @click="openModal('edit', item)"><i class="pi pi-pencil"></i></a>
                             </td>

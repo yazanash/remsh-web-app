@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import axiosInstance from '@/utils/axios';
-import { data } from 'autoprefixer';
 
 export const useProductStore = defineStore('products', {
   state: () => ({
@@ -18,7 +17,7 @@ export const useProductStore = defineStore('products', {
     async fetchProducts(filters=null,operation=null) {
       this.loading = true;
       this.error = null;
-      try {
+      // try {
         const filter = {
           params: {},
         };
@@ -46,16 +45,17 @@ export const useProductStore = defineStore('products', {
        
        
         const response = await axiosInstance.get('/api/products/',filter); // Adjust the endpoint to match your API
-        this.products = response.data.data; // Assume API returns the product list in `response.data
         console.log( response.data)
+        this.products = response.data.data; // Assume API returns the product list in `response.data
+       
         this.pagination.next = response.data.next_page;
         this.pagination.previous = response.data.previous_page;
-      } catch (err) {
-        console.log(err);
-        this.error = 'Failed to load products.';
-      } finally {
+      // } catch (err) {
+      //   console.log(err);
+      //   this.error = 'Failed to load products.';
+      // } finally {
         this.loading = false;
-      }
+      // }
     },
     async fetchCategories() {
         try {

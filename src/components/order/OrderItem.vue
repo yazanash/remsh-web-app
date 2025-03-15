@@ -27,17 +27,17 @@ const getBadgeClass=(status) => {
 <template>
         <tr >
             <th scope="row">{{order.id}}</th>
-            <td>{{order.customer}}</td>
+            <td>{{order.user}}</td>
             <td class="text-center"> 
                 <span class="badge" :class="getBadgeClass(order.status)">
                     {{ getStatusName(order.status) }}
                 </span>
             </td>
-            <td>{{order.delivery}}</td>
-            <td>{{order.items}}</td>
+            <td>{{order.delivery_office}}</td>
+            <td>{{order.order_items_count}}</td>
             <td>{{order.total}}</td>
             <td>
-              <RouterLink class="btn btn-info"  to="/orders/view"><i class="pi pi-eye"></i></RouterLink>
+              <RouterLink class="btn btn-info mx-1"  :to="`/orders/${order.id}`"><i class="pi pi-eye"></i></RouterLink>
             </td>
         </tr>
 </template>
