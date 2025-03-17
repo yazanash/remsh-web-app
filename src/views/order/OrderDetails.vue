@@ -17,13 +17,13 @@ const form = reactive({
 
 const getStatusName=(status)=>{
     const statusMap = {
-        P: "Pending",
-        PR: "Processing",
-        S: "Shipped",
-        C: "Canceled",
-        D: "Delivered"
+        P: "قيد الانتظار",
+        PR: "قيد التجهيز",
+        S: "تم الشحن",
+        C: "تم الالغاء",
+        D: "تم التوصيل"
       };
-      return statusMap[status] || "Unknown";
+      return statusMap[status] || "غير معروف";
 }
 const getBadgeClass=(status) => {
       const badgeClasses = {
@@ -52,7 +52,15 @@ onMounted(async() => {
 </script>
 
 <template>
-    <main class="container p-3 ">
+    <div v-if="orderStore.loading">
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
+    <div v-if="orderStore.error">{{ orderStore.error }}</div>
+        <main v-if="!orderStore.loading && !orderStore.error" class="container p-3 ">
         <div class="row mb-3">
             <div class="col-md-12 card mb-3">
                 <div class="row g-0">
@@ -86,20 +94,20 @@ onMounted(async() => {
             <form @submit.prevent="handleChangeStatus" class="row g-3 mb-3">
                 <div class="col-3">
                     <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">Status</span>
+                        <span class="input-group-text" id="inputGroup-sizing-default">الحالة</span>
                         <select v-model="form.status" class="form-select" aria-label="Default select example">
-                            <option value="P">Pending</option>
-                            <option value="PR">Processing</option>
-                            <option value="S">Shipped</option>
-                            <option value="D">Deliverd</option>
-                            <option value="C">Canceled</option>
+                            <option value="P">قيد الانتظار</option>
+                            <option value="PR">قيد التجهيز</option>
+                            <option value="S">تم الشحن</option>
+                            <option value="D">تم التوصيل</option>
+                            <option value="C">تم الالغاء</option>
                         </select>
                     </div>
                 </div>
                 <div class="col">
                     <button :disabled="orderStore.changestatusloading||!form.status" type="submit" class="btn btn-primary">
                         <span v-if="orderStore.changestatusloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Change status
+                         تغيير الحالة
                     </button>
                 </div>
             </form>
@@ -109,14 +117,14 @@ onMounted(async() => {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">image</th>
-                            <th scope="col">name </th>
-                            <th scope="col">Size</th>
-                            <th scope="col">Color</th>
-                            <th scope="col">Price </th>
-                            <th scope="col">Offer </th>
-                            <th scope="col">Count</th>
-                            <th scope="col">Total</th>
+                            <th scope="col">الصورة</th>
+                            <th scope="col">اسم المنتج </th>
+                            <th scope="col">القياس</th>
+                            <th scope="col">اللون</th>
+                            <th scope="col">السعر </th>
+                            <th scope="col">السعر المخفض </th>
+                            <th scope="col">الكمية</th>
+                            <th scope="col">الاجمالي</th>
                         </tr>
                     </thead>
                     <tbody>

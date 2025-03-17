@@ -29,13 +29,13 @@ const login = async () => {
     <div class="text-center">
       <form class="form-signin" @submit.prevent="login">
       <img class="mb-4" :src="logo" alt="" width="72" height="72">
-      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      <h1 class="h3 mb-3 font-weight-normal">اهلا بعودتك</h1>
       <!-- <label for="inputEmail" class="sr-only">Email address</label> -->
-      <input type="email" id="inputEmail" v-model="form.email" class="form-control mb-3" placeholder="Email address" required="" autofocus="">
+      <input type="email" id="inputEmail" v-model="form.email" class="form-control mb-3" placeholder="البريد الالكتروني" required autofocus="">
       <!-- <label for="inputPassword" class="sr-only">Password</label> -->
-      <input type="password" v-model="form.password"  id="inputPassword" class="form-control mb-3" placeholder="Password" required="">
+      <input type="password" v-model="form.password"  id="inputPassword" class="form-control mb-3" placeholder="كلمة المرور" required>
       <strong class="text-danger text-center">{{ error.message }}</strong>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">تسجيل دخول</button>
       <p class="mt-5 mb-3 text-muted">Trioverse 2025 ©</p>
     </form>
     </div>

@@ -40,7 +40,13 @@ onMounted(async() => {
 </script>
 
 <template>
-    <div v-if="productDataStore.loading">Loading...</div>
+    <div v-if="productDataStore.loading">
+        <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
 <div v-if="productDataStore.error">{{ productDataStore.error }}</div>
     <main v-if="!productDataStore.loading && !productDataStore.error" class="container p-3 ">
         <ProductInfo :info="productDataStore.product?.info"/>
@@ -48,26 +54,26 @@ onMounted(async() => {
     
         <div class="row">
             <div class="d-flex flex-row justify-content-between">
-                <h3>Colors & Sizes</h3>
+                <h3>القياسات و الالوان</h3>
             </div>
             <form @submit.prevent="handleAddItem" class="row g-3 mb-3">
                 <div class="col-3">
                     <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-default">Color</span>
+                        <span class="input-group-text" id="inputGroup-sizing-default">اللون</span>
                         <input type="color" v-model="item_form.color" class="form-control form-control-color" id="exampleColorInput" value="#563d7c" title="Choose your color">
 
                     </div>
                 </div>
                 <div class="col-7">
                     <div class="input-group mb-3">
-                        <span class="input-group-text" id="inputGroup-default">Size</span>
+                        <span class="input-group-text" id="inputGroup-default">القياس</span>
                         <input type="text" v-model="item_form.size" class="form-control" id="size" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                     </div>
                 </div>
                 <div class="col">
                     <button :disabled="productDataStore.itemloading" type="submit" class="btn btn-primary">
                         <span v-if="productDataStore.itemloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Add
+                        اضافة
                     </button>
                 </div>
             </form>
@@ -77,9 +83,9 @@ onMounted(async() => {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Size</th>
-                            <th scope="col">Color</th>
-                            <th scope="col">Active</th>
+                            <th scope="col">القياس</th>
+                            <th scope="col">اللون</th>
+                            <th scope="col">الحالة ( متوفر / غير متوفر)</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>

@@ -13,6 +13,7 @@ import DeliveryList from '@/views/Delivery/DeliveryList.vue';
 import EditProduct from '@/views/product/EditProduct.vue';
 import ProductDetails from '@/views/product/ProductDetails.vue';
 import Profile from '@/views/user/Profile.vue';
+import Admins from '@/views/user/Admins.vue';
 import { useAuthStore } from '@/stores/auth';
 
 const router = createRouter({
@@ -34,84 +35,104 @@ const router = createRouter({
         path: '/',
         name: 'home',
         component: Home,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true , allowedGroups: ['admin', 'supervisor']}
       },
       {
         path: '/categories',
         name: 'Categories',
         component: categoryList,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true , allowedGroups: ['admin', 'supervisor']}
       },
       {
         path: '/products',
         name: 'Products',
         component: ProductList,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, allowedGroups: ['admin', 'supervisor','data_entry'] }
       },
       {
         path: '/products/:id',
         name: 'ProductDetails',
         component: ProductDetails,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true , allowedGroups: ['admin', 'supervisor','data_entry']}
       },
       {
         path: '/products/edit/:id',
         name: 'Product.edit',
         component: EditProduct,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true , allowedGroups: ['admin', 'supervisor','data_entry']}
       },
       {
         path: '/products/create',
         name: 'Products.create',
         component: AddProduct,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true , allowedGroups: ['admin', 'supervisor','data_entry']}
       },
       {
         path: '/orders',
         name: 'Orders',
         component: OrdersList,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true , allowedGroups: ['admin', 'supervisor','data_entry']}
       },
       {
         path: '/orders/:id',
         name: 'OrderDetails',
         component: OrderDetails,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true , allowedGroups: ['admin', 'supervisor','data_entry']}
       },
       {
         path: '/coupons',
         name: 'Coupons',
         component: CouponList,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true , allowedGroups: ['admin', 'supervisor']}
       },
       {
         path: '/delivery',
         name: 'Delivery',
         component: DeliveryList,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true , allowedGroups: ['admin', 'supervisor']}
       },
       {
         path: '/profile',
         name: 'Profile',
         component: Profile,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true , allowedGroups: ['admin', 'supervisor','data_entry']}
+      },
+      {
+        path: '/users',
+        name: 'Users',
+        component: Admins,
+        meta: { requiresAuth: true , allowedGroups: ['admin'] }
       },
     ],
   });
-  router.beforeEach(async (to, from, next) => {
+
+router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStore();
+
+    // Check if the user is authenticated
     const isAuthenticated = !!authStore.access || !!localStorage.getItem('access');
+
     if (to.meta.requiresAuth && !isAuthenticated) {
-      // Redirect unauthenticated users trying to access protected routes
-      console.log(isAuthenticated)
-      authStore.logout();
-      next('/login');
+        // Redirect unauthenticated users trying to access protected routes
+        authStore.logout();
+        next('/login');
     } else if (to.meta.requiresUnauthenticated && isAuthenticated) {
-      // Redirect authenticated users trying to access unauthenticated routes
-      next('/');
+        // Redirect authenticated users trying to access unauthenticated routes
+        next('/');
+    } else if (to.meta.allowedGroups) {
+        // Check the user's group against allowed groups for the route
+        const userGroup = authStore.group; // Assuming group is stored in Pinia authStore
+        console.log(userGroup)
+        if (!to.meta.allowedGroups.includes(userGroup)) {
+            // Redirect the user if their group is not authorized
+            console.log(`Access denied for group: ${userGroup}`);
+            next('/unauthorized'); // Redirect to an unauthorized page or home
+        } else {
+            next(); // Allow access if the group is authorized
+        }
     } else {
-      // Proceed as normal
-      next();
+        // Proceed as normal
+        next();
     }
-  });
+});
   export default router;

@@ -30,8 +30,8 @@ onMounted(async () => {
    
 <div   class="container p-3">
     <div class="d-flex flex-row justify-content-between">
-        <h3>Products</h3>
-        <RouterLink :to="`/products/create`" class='btn btn-primary'>Add Product</RouterLink>
+        <h3>المنتجات</h3>
+        <RouterLink :to="`/products/create`" class='btn btn-primary'>اضافة منتج</RouterLink>
     </div>
     
 <hr/>
@@ -67,18 +67,24 @@ onMounted(async () => {
             </div>
         </div>
     </form>
-    <div v-if="productStore.loading">Loading...</div>
+    <div v-if="productStore.loading">
+        <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
     <div v-if="productStore.error">{{ productStore.error }}</div>
         <div v-if="!productStore.loading && !productStore.error" class="border table-responsive rounded p-1">
                 <table class="table ">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">image</th>
-                            <th scope="col">name </th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Price </th>
-                            <th scope="col">Offer </th>
+                            <th scope="col">الصورة</th>
+                            <th scope="col">الاسم </th>
+                            <th scope="col">الوصف</th>
+                            <th scope="col">السعر </th>
+                            <th scope="col">السعر المخفظ </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -86,8 +92,8 @@ onMounted(async () => {
                     </tbody>
                 </table>
                 <div class="d-flex flex-row justify-content-center align-items-center">
-                    <button @click="handleProductsPages('previous')" :disabled="!productStore.pagination.previous" class="btn btn-primary mx-1">Previous</button>
-                    <button @click="handleProductsPages('next')" :disabled="!productStore.pagination.next" class="btn btn-primary mx-1">Next</button>
+                    <button @click="handleProductsPages('previous')" :disabled="!productStore.pagination.previous" class="btn btn-primary mx-1">السابق</button>
+                    <button @click="handleProductsPages('next')" :disabled="!productStore.pagination.next" class="btn btn-primary mx-1">التالي</button>
                 </div>
                 
             </div>

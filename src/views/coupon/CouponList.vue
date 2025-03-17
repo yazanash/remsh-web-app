@@ -65,8 +65,8 @@ onMounted(async () => {
 <template>
 <div class="container p-3">
     <div class="d-flex flex-row justify-content-between">
-        <h3>Coupons</h3>
-        <a @click="openModal('add')" class='btn btn-primary'>Add Coupon</a>
+        <h3>الكوبونات</h3>
+        <a @click="openModal('add')" class='btn btn-primary'>اضافة كوبون</a>
     </div>
     
 <hr/>
@@ -74,47 +74,53 @@ onMounted(async () => {
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">{{ isEditing.value ? 'Edit Delivery' : 'Add Delivery' }}</h5>
+            <h5 class="modal-title">{{ isEditing.value ? 'تعديل كوبون' : 'اضافة كوبون' }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form @submit.prevent="handleSubmit">
                 <div class="col-md-6 mb-3">
-                    <label for="productName" class="form-label">Code</label>
-                    <input type="text" v-model="form.code" class="form-control" id="productName" placeholder="Enter coupon code" required>
+                    <label for="productName" class="form-label">الرمز</label>
+                    <input type="text" v-model="form.code" class="form-control" id="productName" placeholder="مثال : remsh30" required>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="productName" class="form-label">Percent</label>
-                    <input type="number" v-model="form.percent" class="form-control" id="productName" placeholder="Enter coupon percent %" required>
+                    <label for="productName" class="form-label">نسبة الحسم</label>
+                    <input type="number" v-model="form.percent" class="form-control" id="productName" placeholder="ادخل نسبة الحسم%" required>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="productName" class="form-label">ExpireDate</label>
-                    <input type="datetime-local" v-model="form.expire" class="form-control" id="productName" placeholder="Enter coupon expire date" required>
+                    <label for="productName" class="form-label">تاريخ نهاية الكوبون</label>
+                    <input type="datetime-local" v-model="form.expire" class="form-control" id="productName" required>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="productName" class="form-label">Count</label>
-                    <input type="number" v-model="form.count" class="form-control" id="productName" placeholder="leave it blank if the coupon unlimited" required>
+                    <label for="productName" class="form-label">العدد </label>
+                    <input type="number" v-model="form.count" class="form-control" id="productName" placeholder="اتركه فارغا في حالة ان الكوبون غير محدود العدد" required>
                 </div>
               <button type="submit" class="btn btn-primary">
                 <span v-if="couponStore.loadingoperation" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                {{ isEditing.value ? 'Update' : 'Save' }}
+                {{ isEditing.value ? 'تعديل' : 'حفظ' }}
               </button>
             </form>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="couponStore.loading">Loading...</div>
+    <div v-if="couponStore.loading">
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
     <div v-if="couponStore.error">{{ couponStore.error }}</div>
         <div v-if="!couponStore.loading && !couponStore.error" class="border table-responsive rounded p-1">
                 <table class="table ">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Code</th>
-                            <th scope="col">Percent</th>
-                            <th scope="col">ExpireDate</th>
-                            <th scope="col">Count</th>
+                            <th scope="col">الرمز</th>
+                            <th scope="col">النسبة</th>
+                            <th scope="col">تاريخ الانتهاء</th>
+                            <th scope="col">العدد</th>
                         </tr>
                     </thead>
                     <tbody>
