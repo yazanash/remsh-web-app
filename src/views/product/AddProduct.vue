@@ -50,7 +50,7 @@ const productStore = useProductStore();
 
 <template>
     <div class="container my-3">
-    <h2 class="text-center mb-4">Add Product</h2>
+    <h2 class="text-center mb-4">اضافة منتج</h2>
     <form class="row " @submit.prevent="handleAddProduct">
         <div class="col-3 d-flex flex-column justify-content-start align-items-center">
             <input
@@ -68,7 +68,7 @@ const productStore = useProductStore();
                 alt="Click to upload" style="height: 200px; width: 200px;"
                
                 />
-                <a  @click="triggerFileInput"  class="btn btn-primary mx-auto" >Change image</a>
+                <a  @click="triggerFileInput"  class="btn btn-primary mx-auto" >تغيير الصورة</a>
                
         </div>
         
@@ -77,11 +77,11 @@ const productStore = useProductStore();
         
       <!-- Product Name -->
       <div class="mb-3">
-        <label for="productName" class="form-label">Product Name</label>
+        <label for="productName" class="form-label">اسم المنتج</label>
         <input type="text" v-model="form.name" class="form-control" id="productName" placeholder="Enter product name" required>
       </div>
       <div class="mb-3">
-        <label for="category"  class="form-label">Category</label>
+        <label for="category"  class="form-label">الفئة</label>
         <select class="form-select" v-model="form.category" id="category" aria-label="Default select example">
           <option v-for="category in productStore.categories" :key="category.id" :value="category.id">
           {{ category.name }}
@@ -91,23 +91,23 @@ const productStore = useProductStore();
       
       <!-- Product Price -->
       <div class="mb-3">
-        <label for="productPrice" class="form-label">Price</label>
+        <label for="productPrice" class="form-label">السعر</label>
         <input type="number" v-model="form.price" class="form-control" id="productPrice" placeholder="Enter product price" required>
       </div>
       <div class="mb-3">
-        <label for="offer" class="form-label">Offer</label>
+        <label for="offer" class="form-label">السعر المخفض</label>
         <input type="number" v-model="form.offer" class="form-control" id="offer" placeholder="Enter product offer" required>
       </div>
       <!-- Product Description -->
       <div class="mb-3">
-        <label for="productDescription" class="form-label">Description</label>
+        <label for="productDescription" class="form-label">الوصف</label>
         <textarea class="form-control" v-model="form.description" id="productDescription" rows="3" placeholder="Enter product description" required></textarea>
       </div>
 
      
 
       <!-- Submit Button -->
-      <button type="submit" class="btn btn-primary float-end">Add Product</button>
+      <button type="submit" class="btn btn-primary float-end">حفظ</button>
     </div>
     </form>
   </div>

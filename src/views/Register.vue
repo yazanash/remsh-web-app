@@ -27,14 +27,14 @@ const register = async () => {
     <div class="text-center">
       <form class="form-signin" @submit.prevent="register">
       <img class="mb-4" :src="logo" alt="" width="72" height="72">
-      <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
+      <h1 class="h3 mb-3 font-weight-normal">اهلا بك</h1>
       <!-- <label for="inputEmail" class="sr-only">Email address</label> -->
-      <input type="email" id="inputEmail" v-model="form.email" class="form-control mb-3" placeholder="Email address" required="" autofocus="">
+      <input type="email" id="inputEmail" v-model="form.email" class="form-control mb-3" placeholder="ادخل البريد الالكتروني" required autofocus="">
       <!-- <label for="inputPassword" class="sr-only">Password</label> -->
-      <input type="password" v-model="form.password"  id="inputPassword" class="form-control mb-3" placeholder="Password" required="">
-      <input type="password" v-model="form.password2"  id="inputPassword" class="form-control mb-3" placeholder="Confirm Password" required="">
+      <input type="password" v-model="form.password"  id="inputPassword" class="form-control mb-3" placeholder="كلمة المرور" required>
+      <input type="password" v-model="form.password2"  id="inputPassword" class="form-control mb-3" placeholder="تاكيد كلمة المرور" required>
       <strong class="text-danger text-center">{{ error.message }}</strong>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">سجل الان</button>
       <p class="mt-5 mb-3 text-muted">Trioverse 2025 ©</p>
       
     </form>

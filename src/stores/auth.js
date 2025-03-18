@@ -1,15 +1,16 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import axiosInstance from '@/utils/axios';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
     access: null,
     refresh: null,
+    group: null,
   }),
   actions: {
     async register(email, password,password2) {
-      const response = await axios.post('/api/register/', { email, password, password2 });
+      const response = await axiosInstance.post('/api/register/', { email, password, password2 });
       this.access = response.data.access;
       this.refresh = response.data.refresh;
       this.user = { email }; // Optionally store user info
@@ -17,7 +18,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('refresh', this.refresh);
     },
     async login(email, password) {
-      const response = await axios.post('/api/login/', { email, password });
+      const response = await axiosInstance.post('/api/login/', { email, password });
       this.access = response.data.access;
       this.refresh = response.data.refresh;
       this.user = { email }; // Optionally store user info
@@ -26,7 +27,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async verifyToken() {
       try {
-         await axios.post('/api/api/token/verify/', { token: this.access });
+         await axiosInstance.post('/api/token/verify/', { token: this.access });
         return true;
       }  catch (error) {
         console.error('Failed to verify token:', error);
@@ -35,9 +36,18 @@ export const useAuthStore = defineStore('auth', {
     },
     async refreshAccessToken() {
       try {
-        const response = await axios.post('/api/api/token/access/', { refresh: this.refresh });
+        const response = await axiosInstance.post('/api/token/access/', { refresh: this.refresh });
         this.access = response.data.access;
         localStorage.setItem('access', this.access);
+      } catch (error) {
+        console.error('Failed to refresh token:', error);
+      }
+    },
+    async getUserGroup() {
+      try {
+        const response = await axiosInstance.get('/api/user-group/');
+        this.group = response.data.data.group;
+        localStorage.setItem('group', this.group);
       } catch (error) {
         console.error('Failed to refresh token:', error);
       }

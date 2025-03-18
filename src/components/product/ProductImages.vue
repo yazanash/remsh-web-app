@@ -88,14 +88,14 @@ const handleDeleteImage = async () => {
 <template>
     <section class="mb-3">
         <div class="d-flex flex-row justify-content-between">
-            <h4>Product images</h4> 
-            <a @click="openModal('add')" class='btn btn-primary'>Add Image</a>
+            <h4>صور المنتج</h4> 
+            <a @click="openModal('add')" class='btn btn-primary'>اضافة صورة</a>
         </div>
         <div class="modal fade " id="categoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">{{ isEditing.value ? 'Edit Image' : 'Add Image' }}</h5>
+            <h5 class="modal-title">{{ isEditing.value ? 'تعديل صورة' : 'اضافة صورة' }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -117,11 +117,11 @@ const handleDeleteImage = async () => {
                
                 />
                 <div class="d-flex flex-row  justify-content-around">
-                    <a  @click="triggerFileInput" class="btn btn-primary mx-2" :class="{'disabled':productDataStore.imageloading || productDataStore.imagedeleteloading}" >select image</a>
+                    <a  @click="triggerFileInput" class="btn btn-primary mx-2" :class="{'disabled':productDataStore.imageloading || productDataStore.imagedeleteloading}" >اختر صورة</a>
                
                     <button  :disabled="productDataStore.imageloading||productDataStore.imagedeleteloading" type="submit" class="btn btn-primary">
                       <span v-if="productDataStore.imageloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                      {{ isEditing.value ? 'Update' : 'Save' }}
+                      {{ isEditing.value ? 'تعديل' : 'حفظ' }}
                     </button>
 
                     <a  v-if="isEditing.value" :class="{'disabled':productDataStore.imageloading || productDataStore.imagedeleteloading}" @click="handleDeleteImage" class="btn btn-danger mx-2" >

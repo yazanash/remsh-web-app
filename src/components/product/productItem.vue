@@ -31,7 +31,7 @@ const handleDeleteItem = async () => {
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" :checked="item.isActive" id="flexCheckDefault">
                     <label class="form-check-label"  for="flexCheckDefault">
-                        Active
+                        فعال
                     </label>
                 </div>
             </td>

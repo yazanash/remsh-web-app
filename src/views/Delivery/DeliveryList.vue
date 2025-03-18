@@ -46,8 +46,8 @@ onMounted(async () => {
 <template>
 <div class="container p-3">
     <div class="d-flex flex-row justify-content-between">
-        <h3>Delivery</h3>
-        <a @click="openModal('add')" class='btn btn-primary'>Add Delivery</a>
+        <h3>مكاتب الشحن</h3>
+        <a @click="openModal('add')" class='btn btn-primary'>اضافة مكتب</a>
     </div>
     
 <hr/>
@@ -56,38 +56,44 @@ onMounted(async () => {
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">{{ isEditing.value ? 'Edit Delivery' : 'Add Delivery' }}</h5>
+            <h5 class="modal-title">{{ isEditing.value ? 'تعديل مكتب' : 'اضافة مكتب' }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form @submit.prevent="handleSubmit">
               <div class="mb-3">
-                <label for="name" class="form-label">Delivery Name</label>
+                <label for="name" class="form-label">اسم المكتب</label>
                 <input type="text" class="form-control" id="name" v-model="form.name" required>
               </div>
               <div class="mb-3">
-                <label for="address" class="form-label">Address</label>
+                <label for="address" class="form-label">العنوان</label>
                 <input type="text" class="form-control" id="address" v-model="form.address" required>
               </div>
               <button type="submit" class="btn btn-primary">
                 <span v-if="deliveryStore.loadingoperation" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                {{ isEditing.value ? 'Update' : 'Save' }}
+                {{ isEditing.value ? 'تعديل' : 'حفظ' }}
               </button>
             </form>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="deliveryStore.loading">Loading...</div>
+    <div v-if="deliveryStore.loading">
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
     <div v-if="deliveryStore.error">{{ deliveryStore.error }}</div>
         <div v-if="!deliveryStore.loading && !deliveryStore.error" class="border table-responsive rounded p-1">
                 <table class="table ">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Name </th>
-                            <th scope="col">Address </th>
-                            <th scope="col">Actions </th>
+                            <th scope="col">مكتب الشحن </th>
+                            <th scope="col">العنوان </th>
+                            <th scope="col">خيارات </th>
                         </tr>
                     </thead>
                     <tbody>

@@ -30,7 +30,7 @@ onMounted(async () => {
 <template>
 <div class="container p-3">
 <div class="d-flex flex-row justify-content-between">
-        <h3>Orders</h3>
+        <h3>الطلبات</h3>
     </div>
     
 <hr/>
@@ -39,12 +39,12 @@ onMounted(async () => {
                 <div class="input-group">
                     <div class="input-group-text"><i class="pi pi-filter"></i></div>
                     <select v-model="form.status" class="form-select" aria-label="Default select example">
-                        <option :selected="true" :value="null">Status</option>
-                        <option value="P">Pending</option>
-                        <option value="PR">Processing</option>
-                        <option value="S">Shipped</option>
-                        <option value="D">Deliverd</option>
-                        <option value="C">Canceled</option>
+                        <option :selected="true" :value="null">الحالة</option>
+                        <option value="P">قيد الانتظار</option>
+                        <option value="PR">قيد التجهيز</option>
+                        <option value="S">تم الشحن</option>
+                        <option value="D">تم التوصيل</option>
+                        <option value="C">تم الالغاء</option>
                     </select>
                 </div>
               
@@ -65,7 +65,13 @@ onMounted(async () => {
             </div>
         </div>
     </form>
-    <div v-if="orderStore.loading">Loading...</div>
+    <div v-if="orderStore.loading">
+        <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
     <div v-if="orderStore.error">{{ orderStore.error }}</div>
 <div v-if="!orderStore.loading && !orderStore.error"  class="row">
             <div class="col-md-12 col-sm-12">
@@ -75,11 +81,11 @@ onMounted(async () => {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Customer</th>
-                            <th class="text-center" scope="col">Status</th>
-                            <th scope="col">Delivery Office</th>
-                            <th scope="col">items</th>
-                            <th scope="col">Total</th>
+                            <th scope="col">اسم الزبون</th>
+                            <th class="text-center" scope="col">الحالة</th>
+                            <th scope="col">مكتب الشحن</th>
+                            <th scope="col">عدد القطع</th>
+                            <th scope="col">الاجمالي</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -87,8 +93,8 @@ onMounted(async () => {
                     </tbody>
                 </table>
                 <div class="d-flex flex-row justify-content-center align-items-center">
-                    <button @click="handleOrderssPages('previous')" :disabled="!orderStore.pagination.previous" class="btn btn-primary mx-1">Previous</button>
-                    <button @click="handleOrderssPages('next')" :disabled="!orderStore.pagination.next" class="btn btn-primary mx-1">Next</button>
+                    <button @click="handleOrderssPages('previous')" :disabled="!orderStore.pagination.previous" class="btn btn-primary mx-1">السابق</button>
+                    <button @click="handleOrderssPages('next')" :disabled="!orderStore.pagination.next" class="btn btn-primary mx-1">التالي</button>
                 </div>
                 
             </div>

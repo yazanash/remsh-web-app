@@ -5,13 +5,13 @@ const props = defineProps({
 });
 const getStatusName=(status)=>{
     const statusMap = {
-        P: "Pending",
-        PR: "Processing",
-        S: "Shipped",
-        C: "Canceled",
-        D: "Delivered"
+        P: "قيد الانتظار",
+        PR: "قيد التجهيز",
+        S: "تم الشحن",
+        C: "تم الالغاء",
+        D: "تم التسليم"
       };
-      return statusMap[status] || "Unknown";
+      return statusMap[status] || "غير محدد";
 }
 const getBadgeClass=(status) => {
       const badgeClasses = {
@@ -27,7 +27,7 @@ const getBadgeClass=(status) => {
 <template>
         <tr >
             <th scope="row">{{order.id}}</th>
-            <td>{{order.user}}</td>
+            <td>{{order.user.name}}</td>
             <td class="text-center"> 
                 <span class="badge" :class="getBadgeClass(order.status)">
                     {{ getStatusName(order.status) }}

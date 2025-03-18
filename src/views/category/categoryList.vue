@@ -41,8 +41,8 @@ onMounted(async () => {
 <template>
 <div class="container p-3">
     <div class="d-flex flex-row justify-content-between">
-        <h3>Categories</h3>
-        <a @click="openModal('add')" class='btn btn-primary'>Add Category</a>
+        <h3>الفئات</h3>
+        <a @click="openModal('add')" class='btn btn-primary'>أضافة فئة</a>
     </div>
     
 <hr/>
@@ -50,33 +50,39 @@ onMounted(async () => {
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">{{ isEditing.value ? 'Edit Category' : 'Add Category' }}</h5>
+            <h5 class="modal-title">{{ isEditing.value ? 'تعديل فئة' : 'اضافة فئة' }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form @submit.prevent="handleSubmit">
                 <div class="col-md-6 mb-3">
-                    <label for="productName" class="form-label">Category</label>
+                    <label for="productName" class="form-label">الفئة</label>
                     <input type="text" v-model="form.name" class="form-control" id="productName" placeholder="Enter category name" required>
                 </div>
               <button :disabled="categoryStore.loadingoperation" type="submit" class="btn btn-primary">
                 <span v-if="categoryStore.loadingoperation" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                {{ isEditing.value ? 'Update' : 'Save' }}
+                {{ isEditing.value ? 'تعديل' : 'حفظ' }}
               </button>
             </form>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="categoryStore.loading">Loading...</div>
+    <div v-if="categoryStore.loading" >
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
     <div v-if="categoryStore.error">{{ categoryStore.error }}</div>
         <div v-if="!categoryStore.loading && !categoryStore.error" class="border table-responsive rounded p-1">
                 <table class="table ">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Name </th>
-                            <th scope="col">Actions </th>
+                            <th scope="col">الاسم </th>
+                            <th scope="col">خيارات </th>
                         </tr>
                     </thead>
                     <tbody>
