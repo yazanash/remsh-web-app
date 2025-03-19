@@ -12,7 +12,8 @@ const orderStore = useOrderStore();
 
 
 const form = reactive({
-    status:null
+    status:null,
+    message:null
 });
 
 const getStatusName=(status)=>{
@@ -46,6 +47,7 @@ onMounted(async() => {
     console.log("mounted")
   await orderStore.fetchOrderById(orderId); 
   form.status=orderStore.order?.status
+  form.status=orderStore.order?.message
 });
 
 
@@ -102,6 +104,13 @@ onMounted(async() => {
                             <option value="D">تم التوصيل</option>
                             <option value="C">تم الالغاء</option>
                         </select>
+                  </div>
+                </div>
+                <div class="col-6">
+                    <div class="d-flex">
+                        <div class="input-group mb-3">
+                            <input class="form-control" v-model="form.message" type="search" placeholder="Search" aria-label="Search">
+                        </div>
                     </div>
                 </div>
                 <div class="col">

@@ -16,6 +16,9 @@ if (authStore.access) {
   if(!authStore.group){
     authStore.getUserGroup();
   }
+  if(!authStore.profile){
+    authStore.getProfile();
+  }
 }
 
 </script>

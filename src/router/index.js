@@ -13,6 +13,7 @@ import DeliveryList from '@/views/Delivery/DeliveryList.vue';
 import EditProduct from '@/views/product/EditProduct.vue';
 import ProductDetails from '@/views/product/ProductDetails.vue';
 import Profile from '@/views/user/Profile.vue';
+import EditProfile from '@/views/user/EditProfile.vue';
 import Admins from '@/views/user/Admins.vue';
 import { useAuthStore } from '@/stores/auth';
 
@@ -94,6 +95,12 @@ const router = createRouter({
       {
         path: '/profile',
         name: 'Profile',
+        component: EditProfile,
+        meta: { requiresAuth: true ,requireProfile: true, allowedGroups: ['admin', 'supervisor','data_entry']}
+      },
+      {
+        path: '/profile/create',
+        name: 'ProfileCreate',
         component: Profile,
         meta: { requiresAuth: true , allowedGroups: ['admin', 'supervisor','data_entry']}
       },
@@ -101,7 +108,7 @@ const router = createRouter({
         path: '/users',
         name: 'Users',
         component: Admins,
-        meta: { requiresAuth: true , allowedGroups: ['admin'] }
+        meta: { requiresAuth: true ,requireProfile: true, allowedGroups: ['admin'] }
       },
     ],
   });
@@ -111,12 +118,19 @@ router.beforeEach(async (to, from, next) => {
 
     // Check if the user is authenticated
     const isAuthenticated = !!authStore.access || !!localStorage.getItem('access');
-
+    const hasProfile = authStore.profile !== null
+    console.log(authStore.profile)
+    console.log(hasProfile)
     if (to.meta.requiresAuth && !isAuthenticated) {
         // Redirect unauthenticated users trying to access protected routes
         authStore.logout();
         next('/login');
-    } else if (to.meta.requiresUnauthenticated && isAuthenticated) {
+    }
+    else if(to.meta.requireProfile&&!hasProfile){
+      console.log(!hasProfile)
+      next('/profile/create');
+    }
+     else if (to.meta.requiresUnauthenticated && isAuthenticated) {
         // Redirect authenticated users trying to access unauthenticated routes
         next('/');
     } else if (to.meta.allowedGroups) {

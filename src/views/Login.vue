@@ -1,23 +1,43 @@
 <script setup>
 import router from '@/router';
 import { reactive } from 'vue';
-import { useAuthStore } from '../stores/auth';
+import { useAuthStore } from '@/stores/auth';
 import logo from '@/assets/logo1.png';
+import Profile from './user/Profile.vue';
 const authStore = useAuthStore();
 const form = reactive({
     email: '',
   password: '',
 });
+const errors = reactive({
+  email: null,
+  password: null,
+});
 const error = reactive({
   message: '',
 });
-
+const validateForm = () => {
+  errors.email = !form.email
+    ? "البريد الالكتروني مطلوب"
+    : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
+    ? "خطأ في الايميل"
+    : null;
+  errors.password = form.password.length < 8
+    ? "يجب ان تكون كلمة السر 8 احرف على الاقل"
+    : null;
+  return !errors.email && !errors.password && !errors.password2; // Return true if no errors
+};
 const login = async () => {
   try {
-    await authStore.login(form.email, form.password);
-    router.push('/'); // Redirect after login
+    if (validateForm()) {
+      await authStore.login(form.email, form.password);
+      router.push('/'); 
+      
+  } else {
+    error.message = "يرجى تصحيح المدخلات لاتمام العملية"
+  }
   } catch (err) {
-    error.message = 'Invalid credentials. Please try again.';
+    error.message = err.message;
     console.error(err);
 };
 }

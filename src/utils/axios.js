@@ -16,14 +16,25 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.log(error)
     if (error.response.status === 401 && error.config && !error.config._retry) {
-      error.config._retry = true;
-      
       const authStore = useAuthStore();
-      await authStore.refreshAccessToken();
-      return axios(error.config);
+      
+      if(authStore.access!==null){
+        console.log("access2")
+        console.log(authStore.access)
+        error.config._retry = true;
+        
+        await authStore.refreshAccessToken();
+        return axios(error.config);
+
+      }
+      else{
+        console.log("access3")
+        return Promise.reject(error);
+
+      }
     }
+    
     return Promise.reject(error);
   }
 );
