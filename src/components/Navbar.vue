@@ -2,7 +2,7 @@
 import logo from '@/assets/logo1.png';
 import { computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
-
+import router from "@/router";
 const authStore = useAuthStore(); // Access the Pinia auth store
 const isAuthenticated = computed(() => !!authStore.access || !!localStorage.getItem('access'));
 const userGroup = computed(() => authStore.group); // Retrieve the user's group
@@ -18,7 +18,7 @@ const allNavigations = [
     {name:"المعلومات الشخصية",to:"/profile",active:true,groups: ['admin', 'supervisor','data_entry']},
     {name:"ادارة التطبيق",to:"/users",active:true,groups: ['admin']},
   { name: 'تسجيل الدخول', to: '/login', active: true, groups: null }, // For unauthenticated users
-  { name: 'التسجيل', to: '/register', active: true, groups: null }, // For unauthenticated users
+  { name: 'التسجيل', to: '/signup', active: true, groups: null }, // For unauthenticated users
   { name: 'تسجيل الخروج', to: '/logout', active: true, groups: null }, // For authenticated users
 ];
 
@@ -30,13 +30,16 @@ const navigations = computed(() => {
   }
   // Show logout and routes allowed for the user's group
   return allNavigations.filter(
-    item =>
-      item.name === 'تسجيل الخروج' || // Always show logout for authenticated users
+    item =>item.name === 'تسجيل الخروج' ||
+     // Always show logout for authenticated users
       (item.groups && item.groups.includes(userGroup.value)) // Filter by allowed groups
   );
 });
 
-
+const handleLogout=()=>{
+  authStore.logout();
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -52,8 +55,10 @@ const navigations = computed(() => {
     <div class="collapse navbar-collapse " id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mx-auto mb-2 mb-lg-0">
         <li v-for="navigation in navigations" :key="navigation.name" class="nav-item">
-          <RouterLink class="nav-link " :class="{'active':navigation.active}"  :to="navigation.to">{{navigation.name}}</RouterLink>
+          <a v-if="navigation.to==='/logout'" class="nav-link active" @click="handleLogout" href="#" >تسجيل خروج</a>
+          <RouterLink v-else class="nav-link " :class="{'active':navigation.active}"  :to="navigation.to">{{navigation.name}}</RouterLink>
         </li>
+        
       </ul>
       
     </div>

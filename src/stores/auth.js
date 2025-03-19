@@ -7,23 +7,47 @@ export const useAuthStore = defineStore('auth', {
     access: null,
     refresh: null,
     group: null,
+    profile: null,
+    registerErroMessage:''
   }),
   actions: {
     async register(email, password,password2) {
-      const response = await axiosInstance.post('/api/register/', { email, password, password2 });
+      try{
+
+      const response = await axiosInstance.post('/api/signup/', { email, password, password2 });
       this.access = response.data.access;
       this.refresh = response.data.refresh;
-      this.user = { email }; // Optionally store user info
+      this.group = response.data.user.group; // Optionally store user info
+      localStorage.setItem('group', this.group);
       localStorage.setItem('access', this.access);
       localStorage.setItem('refresh', this.refresh);
+    }
+      catch(error){
+        
+        if(error.response.status===400){
+          console.log(error.response.status)
+          throw new Error("خطأ في البيانات");
+        }
+      }
     },
     async login(email, password) {
-      const response = await axiosInstance.post('/api/login/', { email, password });
-      this.access = response.data.access;
-      this.refresh = response.data.refresh;
-      this.user = { email }; // Optionally store user info
-      localStorage.setItem('access', this.access);
-      localStorage.setItem('refresh', this.refresh);
+      try{
+        const response = await axiosInstance.post('/api/login/', { email, password });
+        
+        this.access = response.data.access;
+        this.refresh = response.data.refresh;
+        this.user = { email }; // Optionally store user info
+        this.group = response.data.user.group; // Optionally store user info
+        localStorage.setItem('group', this.group);
+        localStorage.setItem('access', this.access);
+        localStorage.setItem('refresh', this.refresh);
+    }
+    catch(error){
+      if(error.response.status===400||error.response.status===401){
+        console.log(error.response.status)
+        throw new Error("خطأ في البيانات");
+      }
+    }
     },
     async verifyToken() {
       try {
@@ -39,6 +63,31 @@ export const useAuthStore = defineStore('auth', {
         const response = await axiosInstance.post('/api/token/access/', { refresh: this.refresh });
         this.access = response.data.access;
         localStorage.setItem('access', this.access);
+      } catch (error) {
+        console.error('Failed to refresh token:', error);
+      }
+    },
+    async getProfile() {
+      try {
+        const response = await axiosInstance.get('/api/customer/profile/');
+        console.log(response.data)
+        this.profile = response.data.data;
+      } catch (error) {
+        console.log('Failed to refresh token:');
+      }
+    },
+    async setProfile(form) {
+      try {
+        const response = await axiosInstance.post('/api/customer/profile/', form);
+        this.profile = response.data.data;
+      } catch (error) {
+        console.error('Failed to refresh token:', error);
+      }
+    },
+    async updateProfile(form) {
+      try {
+        const response = await axiosInstance.put('/api/customer/profile/', form);
+        this.profile = response.data.data;
       } catch (error) {
         console.error('Failed to refresh token:', error);
       }
