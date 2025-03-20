@@ -2,8 +2,7 @@
 import router from '@/router';
 import { reactive } from 'vue';
 import { useAuthStore } from '@/stores/auth';
-import logo from '@/assets/logo1.png';
-import Profile from './user/Profile.vue';
+import logo from '@/assets/app_logo.png';
 const authStore = useAuthStore();
 const form = reactive({
     email: '',
@@ -25,7 +24,7 @@ const validateForm = () => {
   errors.password = form.password.length < 8
     ? "يجب ان تكون كلمة السر 8 احرف على الاقل"
     : null;
-  return !errors.email && !errors.password && !errors.password2; // Return true if no errors
+  return !errors.email && !errors.password; // Return true if no errors
 };
 const login = async () => {
   try {
@@ -33,8 +32,6 @@ const login = async () => {
       await authStore.login(form.email, form.password);
       router.push('/'); 
       
-  } else {
-    error.message = "يرجى تصحيح المدخلات لاتمام العملية"
   }
   } catch (err) {
     error.message = err.message;
@@ -51,11 +48,17 @@ const login = async () => {
       <img class="mb-4" :src="logo" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">اهلا بعودتك</h1>
       <!-- <label for="inputEmail" class="sr-only">Email address</label> -->
-      <input type="email" id="inputEmail" v-model="form.email" class="form-control mb-3" placeholder="البريد الالكتروني" required autofocus="">
-      <!-- <label for="inputPassword" class="sr-only">Password</label> -->
+      <input type="email" id="inputEmail" v-model="form.email" class="form-control mb-3 text-start" placeholder="البريد الالكتروني" required autofocus="">
+      <span v-if="errors.email" class="text-danger">{{ errors.email }}</span>
       <input type="password" v-model="form.password"  id="inputPassword" class="form-control mb-3" placeholder="كلمة المرور" required>
-      <strong class="text-danger text-center">{{ error.message }}</strong>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">تسجيل دخول</button>
+      <span v-if="errors.password" class="text-danger">{{ errors.password }}</span>
+      <div class="mb-3">
+        <strong class="text-danger text-center my-3">{{ error.message }}</strong>
+      </div>
+      <button  :disabled="authStore.operation_loading" class="btn btn-lg btn-primary btn-block" type="submit">
+        <span v-if="authStore.operation_loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        تسجيل دخول
+      </button>
       <p class="mt-5 mb-3 text-muted">Trioverse 2025 ©</p>
     </form>
     </div>

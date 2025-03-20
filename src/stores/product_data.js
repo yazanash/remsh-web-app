@@ -45,8 +45,9 @@ export const useProductDataStore = defineStore('product_data', {
         console.log(response.data)
         this.product.images.push(response.data.data);
       } catch (err) {
-        console.log(err);
-        this.error = 'Failed to add the image.';
+        if(error.response.status===400){
+          console.log(error.response.status)
+          throw new Error("خطأ في البيانات");}
       } finally {
         this.imageloading = false;
       }
@@ -73,8 +74,9 @@ export const useProductDataStore = defineStore('product_data', {
     itemToUpdate.image_url = response.data.data.image_url; // Update its property
   }
     } catch (err) {
-      console.log(err);
-      this.error = 'Failed to add the image.';
+      if(error.response.status===400){
+        console.log(error.response.status)
+        throw new Error("خطأ في البيانات");}
     } finally {
       this.imageloading = false;
     }
@@ -86,8 +88,9 @@ async deleteImage(imageId) {
     const response = await axiosInstance.delete('/api/products/images/delete/'+imageId+'/');
     this.product.images = this.product.images.filter((item) => item.id !== imageId);
   } catch (err) {
-    console.log(err);
-    this.error = 'Failed to add the image.';
+    if(error.response.status===400){
+      console.log(error.response.status)
+      throw new Error("خطأ في البيانات");}
   } finally {
     this.imagedeleteloading = false;
   }
@@ -100,8 +103,9 @@ async addItem(product_id,formData) {
     console.log(response.data)
     this.product.items.push(response.data.data);
   } catch (err) {
-    console.error(err);
-    this.error = 'Failed to add the image.';
+    if(error.response.status===400){
+      console.log(error.response.status)
+      throw new Error("خطأ في البيانات");}
   } finally {
     this.itemloading = false;
   }
@@ -113,8 +117,9 @@ async deleteItem(item_id) {
       const response = await axiosInstance.delete('/api/products/items/delete/'+item_id+'/');
       this.product.items = this.product.items.filter((item) => item.id !== item_id);
     } catch (err) {
-      console.log(err);
-      this.error = 'Failed to add the image.';
+      if(error.response.status===400){
+        console.log(error.response.status)
+        throw new Error("خطأ في البيانات");}
     } finally {
       this.itemdeleteloading = false;
     }

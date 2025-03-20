@@ -11,8 +11,33 @@ const form = reactive({
     code:'',
     percent:0,
     expire:'',
-    count:0
+    count:-1
 });
+
+
+const error = reactive({
+  message: '',
+});
+const errors = reactive({
+  code:null,
+    percent:null,
+    expire:null,
+    count:null
+});
+
+const validateForm = () => {
+  errors.code = !form.code || form.code.trim() === ""
+    ? "هذا الحقل مطلوب" 
+    : null;
+
+    errors.percent = form.percent <=0
+    ? "هذا الحقل مطلوب" 
+    : null;
+  return !errors.code||!errors.percent; // Return true if no errors
+};
+
+
+
 
 const isEditing = reactive({ value: false });
 const openModal = (mode, coupon = null) => {
@@ -22,7 +47,6 @@ const openModal = (mode, coupon = null) => {
     form.percent = coupon.percent;
     const initialDate = new Date(coupon.expire);
     form.expire = initialDate.toISOString().slice(0, 16);
-    
     form.count = coupon.count;
     form.id = coupon.id;
   } else {
@@ -36,20 +60,27 @@ const openModal = (mode, coupon = null) => {
 };
 
 const handleSubmit =async () => {
+  try{
+    if(validateForm()){
+      if (isEditing.value && form.id) {
+        await couponStore.editCoupon(form.id,form);
+      }
+      else{
+        await couponStore.addCoupon(form)
+      }
+      form.id = null;
+      form.code = "";
+      form.percent = "";
+      form.expire = '';
+      form.count = '';
+      const modal = bootstrap.Modal.getInstance(document.getElementById("categoryModal"));
+      modal.hide();
+    }
+  }catch(err){
+    error.message = err.message;
+    console.error(err);
+  }
   
-  if (isEditing.value && form.id) {
-    await couponStore.editCoupon(form.id,form);
-  }
-  else{
-    await couponStore.addCoupon(form)
-  }
-  form.id = null;
-  form.code = "";
-  form.percent = "";
-  form.expire = '';
-  form.count = '';
-  const modal = bootstrap.Modal.getInstance(document.getElementById("categoryModal"));
-  modal.hide();
 };
 const formatDate=(isoDate) =>{
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -82,10 +113,12 @@ onMounted(async () => {
                 <div class="col-md-6 mb-3">
                     <label for="productName" class="form-label">الرمز</label>
                     <input type="text" v-model="form.code" class="form-control" id="productName" placeholder="مثال : remsh30" required>
+                    <span v-if="errors.code" class="text-danger">{{ errors.code }}</span>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="productName" class="form-label">نسبة الحسم</label>
                     <input type="number" v-model="form.percent" class="form-control" id="productName" placeholder="ادخل نسبة الحسم%" required>
+                    <span v-if="errors.percent" class="text-danger">{{ errors.percent }}</span>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="productName" class="form-label">تاريخ نهاية الكوبون</label>
@@ -93,7 +126,10 @@ onMounted(async () => {
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="productName" class="form-label">العدد </label>
-                    <input type="number" v-model="form.count" class="form-control" id="productName" placeholder="اتركه فارغا في حالة ان الكوبون غير محدود العدد" required>
+                    <input type="number" v-model="form.count" class="form-control" id="productName" placeholder="اتركه فارغا في حالة ان الكوبون غير محدود العدد">
+                </div>
+                <div class="mb-3">
+                  <strong class="text-danger text-center my-3">{{ error.message }}</strong>
                 </div>
               <button type="submit" class="btn btn-primary">
                 <span v-if="couponStore.loadingoperation" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

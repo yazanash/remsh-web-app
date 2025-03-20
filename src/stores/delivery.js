@@ -20,7 +20,7 @@ export const useDeliveryStore = defineStore('delivery', {
         console.log(response.data);
       } catch (err) {
         console.log(err);
-        this.error = 'Failed to load products.';
+        this.error = 'خطأ في عرض مكاتب الشحن';
       } finally {
         this.loading = false;
       }
@@ -32,8 +32,9 @@ export const useDeliveryStore = defineStore('delivery', {
           const response = await axiosInstance.post('/api/delivery/create/', formData);
           this.deliveries.push(response.data.data);
         } catch (err) {
-          console.error(err);
-          this.error = 'Failed to add the image.';
+          if(error.response.status===400){
+            console.log(error.response.status)
+            throw new Error("خطأ في البيانات");}
         } finally {
           this.loadingoperation = false;
         }
@@ -49,8 +50,9 @@ export const useDeliveryStore = defineStore('delivery', {
             itemToUpdate.address = response.data.data.address; // Update its property
           }
         } catch (err) {
-          console.error(err);
-          this.error = 'Failed to add the image.';
+          if(error.response.status===400){
+            console.log(error.response.status)
+            throw new Error("خطأ في البيانات");}
         } finally {
           this.loadingoperation = false;
         }

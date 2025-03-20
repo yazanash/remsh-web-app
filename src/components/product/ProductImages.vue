@@ -30,6 +30,9 @@ const onImageSelect = (event) => {
     form.image = file; 
     }
 };
+const error = reactive({
+  message: '',
+});
 const isEditing = reactive({ value: false });
 const openModal = (mode, image = null) => {
     console.log(image)
@@ -64,7 +67,8 @@ const handleAddImage = async () => {
   }
    
   } catch (err) {
-    console.error('Error adding product:', err);
+    error.message = err.message;
+    console.error(err);
   }
 };
 const handleDeleteImage = async () => {
@@ -80,7 +84,7 @@ const handleDeleteImage = async () => {
   }
    
   } catch (err) {
-    console.error('Error adding product:', err);
+    error.message=err.message
   }
 };
 </script>
@@ -116,6 +120,9 @@ const handleDeleteImage = async () => {
                 alt="Click to upload" style="width: 300px; height: 300px;"
                
                 />
+                <div class="mb-3">
+                  <strong class="text-danger text-center my-3">{{ error.message }}</strong>
+                </div>
                 <div class="d-flex flex-row  justify-content-around">
                     <a  @click="triggerFileInput" class="btn btn-primary mx-2" :class="{'disabled':productDataStore.imageloading || productDataStore.imagedeleteloading}" >اختر صورة</a>
                

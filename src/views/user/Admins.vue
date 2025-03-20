@@ -1,6 +1,6 @@
 <script setup>
 import UserCard from '@/components/UserCard.vue';
-import { reactive, ref, computed } from 'vue';
+import { reactive} from 'vue';
 import { onMounted } from 'vue';
 import { useUserStore } from '@/stores/user';
 import * as bootstrap from "bootstrap";
@@ -9,7 +9,9 @@ const form = reactive({
     email:'',
     group:""
 });
-
+const error = reactive({
+  message: '',
+});
 const isEditing = reactive({ value: false });
 const openModal = () => {
     form.email = "";
@@ -19,12 +21,13 @@ const openModal = () => {
 };
 
 const handleSubmit =async () => {
-  
+  try{
     await userStore.AddToGroup(form)
-if(!userStore.add_error){
-  const modal = bootstrap.Modal.getInstance(document.getElementById("categoryModal"));
-  modal.hide();
-}
+    const modal = bootstrap.Modal.getInstance(document.getElementById("categoryModal"));
+    modal.hide();
+  }catch(err){
+    error.message = err.message
+  }
 };
 onMounted(async () => {
   await userStore.fetchAdminUsers(); // Fetch products when the component is mounted
@@ -62,7 +65,7 @@ onMounted(async () => {
                     </select>
                 </div>
                 <div class="mb-3">
-                <strong v-if="userStore.add_error" class="text-danger">{{ userStore.add_error }}</strong>
+                <strong v-if="error.message" class="text-danger">{{ error.message }}</strong>
 
                 </div>
               <button :disabled="userStore.loadingoperation" type="submit" class="btn btn-primary">

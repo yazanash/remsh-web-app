@@ -2,7 +2,7 @@
 import { RouterView } from 'vue-router';
 import Navbar from '@/components/Navbar.vue';
 import { useAuthStore } from '@/stores/auth';
-
+import Sidebar from './components/common/Sidebar.vue';
 const authStore = useAuthStore();
 authStore.access = localStorage.getItem('access');
 authStore.refresh = localStorage.getItem('refresh');
@@ -23,10 +23,15 @@ if (authStore.access) {
 
 </script>
 <template>
-  <Navbar/>
-  <div style="margin-top: 5rem;"> 
-    <RouterView />
+  <!-- <Navbar/> -->
+  <div class="container-fluid p-0 d-flex h-100">
+    
+      <Sidebar/>
 
+      <div class="container"> 
+        <RouterView />
+      </div>
   </div>
+  
 </template>
 

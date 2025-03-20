@@ -26,10 +26,12 @@ const handleSubmit =async () => {
       <div class="col-md-12">
         <label for="inputEmail4" class="form-label">الاسم</label>
         <input v-model="form.name" type="text" class="form-control" id="inputEmail4">
+        <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
       </div>
       <div class="col-md-12">
         <label for="inputPassword4" class="form-label">رقم الهاتف</label>
         <input type="tel" v-model="form.phone" class="form-control" id="inputPassword4">
+        <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
       </div>
           <div class="col-12">
             <label for="inputEmail4" class="form-label">الجنس</label>
@@ -52,6 +54,9 @@ const handleSubmit =async () => {
             <div class="col-md-12">
               <label for="inputPassword4" class="form-label">تاريخ الميلاد</label>
               <input type="date" v-model="form.birthdate" class="form-control" id="inputPassword4">
+            </div>
+            <div class="mb-3">
+                <strong v-if="error.message" class="text-danger">{{ error.message }}</strong>
             </div>
             <div class="col-12">
               <button type="submit" class="btn btn-primary float-end">حفظ</button>

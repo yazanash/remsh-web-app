@@ -47,7 +47,7 @@ export const useOrderStore = defineStore('orders', {
         this.pagination.previous = response.data.previous_page;
       } catch (err) {
         console.log(err);
-        this.error = 'Failed to load products.';
+        this.error = 'خطأ في عرض الطلبات';
       } finally {
         this.loading = false;
       }
@@ -74,6 +74,7 @@ export const useOrderStore = defineStore('orders', {
                 
                 const response = await axiosInstance.put('/api/orders/status/'+order_id+'/', form);
                 this.order.status = response.data.data.status
+                this.order.message = response.data.data.message
               } catch (err) {
                 console.log(err);
                 this.error = 'Failed to add the product.';

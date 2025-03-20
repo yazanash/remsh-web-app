@@ -9,7 +9,12 @@ const form = reactive({
     name:'',
     id:null
 });
-
+const error = reactive({
+  message: '',
+});
+const errors = reactive({
+  name: null,
+});
 const isEditing = reactive({ value: false });
 const openModal = (mode, category = null) => {
   isEditing.value = mode === "edit";
@@ -23,16 +28,29 @@ const openModal = (mode, category = null) => {
   const modal = new bootstrap.Modal(document.getElementById("categoryModal"));
   modal.show();
 };
-
+const validateForm = () => {
+  errors.name = !form.name || form.name.trim() === ""
+    ? "هذا الحقل مطلوب" 
+    : null;
+  return !errors.name; // Return true if no errors
+};
 const handleSubmit =async () => {
-  if (isEditing.value && form.id) {
-    await categoryStore.editCategory(form.id,form);
-  }
-  else{
-    await categoryStore.addCategory(form)
-  }
-  const modal = bootstrap.Modal.getInstance(document.getElementById("categoryModal"));
-  modal.hide();
+  try{
+    if(validateForm()){
+      if (isEditing.value && form.id) {
+      await categoryStore.editCategory(form.id,form);
+      }
+      else{
+        await categoryStore.addCategory(form)
+      }
+      const modal = bootstrap.Modal.getInstance(document.getElementById("categoryModal"));
+      modal.hide();
+    }
+ 
+}catch(err){
+  error.message = err.message;
+    console.error(err);
+}
 };
 onMounted(async () => {
   await categoryStore.fetchCategories(); // Fetch products when the component is mounted
@@ -57,8 +75,12 @@ onMounted(async () => {
             <form @submit.prevent="handleSubmit">
                 <div class="col-md-6 mb-3">
                     <label for="productName" class="form-label">الفئة</label>
-                    <input type="text" v-model="form.name" class="form-control" id="productName" placeholder="Enter category name" required>
-                </div>
+                    <input type="text" v-model="form.name" class="form-control" id="productName" placeholder="ادخل اسم الفئة" required>
+                    <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
+                  </div>
+                  <div class="mb-3">
+                    <strong class="text-danger text-center my-3">{{ error.message }}</strong>
+                  </div>
               <button :disabled="categoryStore.loadingoperation" type="submit" class="btn btn-primary">
                 <span v-if="categoryStore.loadingoperation" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 {{ isEditing.value ? 'تعديل' : 'حفظ' }}

@@ -12,6 +12,30 @@ const productId = router.params.id;
 const imagePreview = ref(null);
 const fileInput = ref(null);
   
+
+const error = reactive({
+  message: '',
+});
+const errors = reactive({
+  name: null,
+  category:null,
+  price: null,
+  offer:null,
+  description: null,
+  thumbnail: null,
+});
+const validateForm = () => {
+  errors.name = !form.name || form.name.trim() === ""
+    ? "هذا الحقل مطلوب" 
+    : null;
+    errors.category = !form.category 
+    ? "هذا الحقل مطلوب" 
+    : null;
+    errors.description = !form.description || form.description.trim() === ""
+    ? "هذا الحقل مطلوب" 
+    : null;
+  return !errors.name||!errors.category||!errors.description; // Return true if no errors
+};
 const triggerFileInput = () => {
       fileInput.value.click();
     };
@@ -36,10 +60,13 @@ const form = reactive({
 });
 const handleAddProduct = async () => {
   try {
-   await productStore.editProduct(productId,form);
-   myrouter.push('/products/'+productId);
+    if(validateForm()){
+      await productStore.editProduct(productId,form);
+      myrouter.push('/products/'+productId);
+    }
   } catch (err) {
-    console.error('Error adding product:', err);
+    error.message = err.message;
+    console.error(err);
   }
 };
 onMounted(async () => {
@@ -91,6 +118,7 @@ const productStore = useProductStore();
       <div class="mb-3">
         <label for="productName" class="form-label">اسم المنتج</label>
         <input type="text" v-model="form.name" class="form-control" id="productName" placeholder="Enter product name" required>
+        <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
       </div>
       <div class="mb-3">
         <label for="category"  class="form-label">الفئة</label>
@@ -99,7 +127,8 @@ const productStore = useProductStore();
           {{ category.name }}
         </option>
       </select>
-      </div>
+      <span v-if="errors.category" class="text-danger">{{ errors.category }}</span>  
+    </div>
       
       <!-- Product Price -->
       <div class="mb-3">
@@ -114,16 +143,19 @@ const productStore = useProductStore();
       <div class="mb-3">
         <label for="productDescription" class="form-label">الوصف</label>
         <textarea class="form-control" v-model="form.description" id="productDescription" rows="3" placeholder="Enter product description" required></textarea>
+        <span v-if="errors.description" class="text-danger">{{ errors.description }}</span>
       </div>
 
      
-
+      <div class="mb-3">
+        <strong class="text-danger text-center my-3">{{ error.message }}</strong>
+      </div>
       <!-- Submit Button -->
-      <button type="submit" class="btn btn-primary float-end">تعديل</button>
+      <button :disabled="productStore.loadingoperation" type="submit" class="btn btn-primary float-end">
+        <span v-if="productStore.loadingoperation" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        حفظ
+      </button>
     </div>
     </form>
   </div>
 </template>
-<style scoped>
-
-</style>
