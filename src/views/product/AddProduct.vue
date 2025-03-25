@@ -78,7 +78,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="container my-3">
+    <div class="container p-3 my-3 rounded bg-white">
     <h2 class="text-center mb-4">اضافة منتج</h2>
     <form class="row " @submit.prevent="handleAddProduct">
         <div class="col-3 d-flex flex-column justify-content-start align-items-center">

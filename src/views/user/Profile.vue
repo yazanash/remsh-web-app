@@ -10,15 +10,37 @@ const form = reactive({
     phone:"",
     birthdate:""
 });
-
+const errors = reactive({
+  email: null,
+  password: null,
+});
+const error = reactive({
+  message: '',
+});
+const validateForm = () => {
+  errors.name = !form.name
+    ? "هذا الحقل مطلوب"
+    : null;
+    errors.phone = !form.phone
+    ? "هذا الحقل مطلوب"
+    : null;
+  return !errors.phone && !errors.name; // Return true if no errors
+};
 const handleSubmit =async () => {
-    await authStore.setProfile(form)
-    router.push('/');
+  try{
+    if(validateForm()){
+      await authStore.setProfile(form)
+      router.push('/');
+    }
+  }catch(err){
+    error.message=err.message
+  }
+   
 };
 </script>
 
 <template>
-    <div class="container d-flex justify-content-center align-items-center flex-column my-3 ">
+    <div class="container p-3 bg-white rounded d-flex justify-content-center align-items-center flex-column my-3 ">
     <h2 class="mb-4  row">الصفحة الشخصية</h2>
     <div class="col-md-6 col-sm-12">
 

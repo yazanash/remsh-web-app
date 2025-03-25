@@ -28,7 +28,7 @@ if (authStore.access) {
     
       <Sidebar/>
 
-      <div class="container"> 
+      <div class="container-fluid mx-1 my-2"> 
         <RouterView />
       </div>
   </div>

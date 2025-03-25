@@ -70,6 +70,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await axiosInstance.post('/api/token/access/', { refresh: this.refresh });
         this.access = response.data.access;
+        console.log(response.data.access)
         localStorage.setItem('access', this.access);
       } catch (error) {
         console.error('Failed to refresh token:', error);
@@ -81,7 +82,8 @@ export const useAuthStore = defineStore('auth', {
         console.log(response.data)
         this.profile = response.data.data;
       } catch (error) {
-        console.log('Failed to refresh token:');
+        console.log(response.data)
+        console.log('Failed to get profile:');
       }
     },
     async setProfile(form) {

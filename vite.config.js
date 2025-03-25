@@ -11,13 +11,6 @@ export default defineConfig({
   ],
   server: {
     port: 3000,
-    proxy: {
-      '/api': {
-        target: 'https://e-remsh.vercel.app',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
   },
   resolve: {
     alias: {

@@ -42,11 +42,14 @@ onMounted(async() => {
       </div>
     </div>
 <div v-if="productDataStore.error">{{ productDataStore.error }}</div>
-    <main v-if="!productDataStore.loading && !productDataStore.error" class="container p-3 ">
+    <main v-if="!productDataStore.loading && !productDataStore.error" class="container p-3 rounded bg-white">
+        <div class="d-flex flex-row justify-content-between mb-3">
+                <h3>معلومات المنتج</h3>
+            </div>
         <ProductInfo :info="productDataStore.product?.info"/>
         <ProductImages :id="productDataStore.product?.info.id" :images="productDataStore.product?.images"/>
     
-        <div class="row">
+        <section>
             <div class="d-flex flex-row justify-content-between">
                 <h3>القياسات و الالوان</h3>
             </div>
@@ -58,7 +61,7 @@ onMounted(async() => {
 
                     </div>
                 </div>
-                <div class="col-7">
+                <div class="col-4">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="inputGroup-default">القياس</span>
                         <input type="text" v-model="item_form.size" class="form-control" id="size" aria-label="Sizing example input" required aria-describedby="inputGroup-sizing-default">
@@ -93,6 +96,6 @@ onMounted(async() => {
             </div>
             </div>
             
-        </div>
+        </section>
       </main>
 </template>

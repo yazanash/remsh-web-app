@@ -22,8 +22,8 @@ const truncatedDescription = computed(() => {
             <td>{{product.offer}}</td>
             <td>
               <RouterLink class="btn btn-info mx-1"  :to="`/products/${product.id}`"><i class="pi pi-eye"></i></RouterLink>
-              <RouterLink class="btn btn-primary mx-1"  :to="`/products/edit/${product.id}`"><i class="pi pi-pencil"></i></RouterLink>
-              <RouterLink class="btn btn-danger mx-1"  :to="`/products/delete`"><i class="pi pi-trash"></i></RouterLink>
+              <!-- <RouterLink class="btn btn-primary mx-1"  :to="`/products/edit/${product.id}`"><i class="pi pi-pencil"></i></RouterLink> -->
+           
             </td>
         </tr>
 </template>

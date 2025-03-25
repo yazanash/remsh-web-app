@@ -2,12 +2,13 @@ import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
 
 const axiosInstance = axios.create({
-  baseURL: '/api', // Use '/api' to take advantage of the Vite proxy
+  baseURL: 'http://127.0.0.1:8000', // Use '/api' to take advantage of the Vite proxy
 });
 axiosInstance.interceptors.request.use((config) => {
   const authStore = useAuthStore();
   const token = authStore.access || localStorage.getItem('access');
   if (token) {
+    console.log("getit")
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

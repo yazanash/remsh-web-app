@@ -69,7 +69,7 @@ onMounted(async () => {
 });
 </script>
 <template>
-<div class="container p-3">
+<div class="container p-3 rounded bg-white">
     <div class="d-flex flex-row justify-content-between">
         <h3>مكاتب الشحن</h3>
         <a @click="openModal('add')" class='btn btn-primary'>اضافة مكتب</a>

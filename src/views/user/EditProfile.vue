@@ -47,7 +47,7 @@ const validateForm = () => {
 </script>
 
 <template>
-    <div class="container d-flex justify-content-center align-items-center flex-column my-3 ">
+    <div class="container bg-white rounded d-flex justify-content-center align-items-center flex-column my-3 ">
     <h2 class="mb-4  row">الصفحة الشخصية</h2>
     <div class="col-md-6 col-sm-12">
 

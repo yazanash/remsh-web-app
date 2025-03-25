@@ -1,3 +1,23 @@
 /* @tailwind base;
 @tailwind components;
 @tailwind utilities; */
+
+.btn-primary{
+    background-color: #560606 !important;
+    border: #560606 !important;
+    color: #fff;
+}
+
+.btn-secondary ,.btn-info ,.btn-success{
+    background-color: #fac525 !important;
+    border: #fac525 !important;
+    color: #560606 !important;
+    font-weight: 700 !important;
+}
+
+.btn-danger{
+    background-color: #9b0404 !important;
+    border: #9b0404 !important;
+    color: #fff;
+    
+}

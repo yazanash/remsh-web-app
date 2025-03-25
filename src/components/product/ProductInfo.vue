@@ -12,13 +12,7 @@ const props = defineProps({
             <div class="col-3">
                 <div class="card " >
                     <img :src="info?.thumbnail" class="card-img-top" alt="...">
-                    <div class="card-body ">
-                        <h5 class="card-title"><i class="pi pi-dollar"></i> {{info?.price}}</h5>
-                       
-                        <p class="card-text"><strong><i class="pi pi-tag"></i> {{ info?.offer }}</strong></p>
-
-                        <p class="card-text"><strong><i class="pi pi-thumbs-up-fill"></i> {{ info?.likes_count }}</strong></p>
-                    </div>
+                    
                 </div>
             </div>
        <div class="col">
@@ -28,9 +22,15 @@ const props = defineProps({
             <h4>{{ info?.name }}</h4>
             <p class="card-text"><strong > {{ info?.category }}</strong> </p>
             <p class="card-text">{{ info?.description }} </p>
-            <RouterLink :to="`/products/edit/${info?.id}`" class="btn btn-info">
+            <h5 class="card-title"><i class="pi pi-dollar"></i> {{info?.price}}</h5>
+                       
+                       <p class="card-text"><strong><i class="pi pi-tag"></i> {{ info?.offer }}</strong></p>
+
+                       <p class="card-text"><strong><i class="pi pi-thumbs-up-fill"></i> {{ info?.likes_count }}</strong></p>
+            <RouterLink :to="`/products/edit/${info?.id}`" class="btn btn-secondary">
                 تعديل
             </RouterLink>
+            <RouterLink class="btn btn-danger mx-1"  :to="`/products/delete`"><i class="pi pi-trash"></i></RouterLink>
         </section>
       
        

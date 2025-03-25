@@ -102,13 +102,13 @@ const router = createRouter({
         path: '/profile/create',
         name: 'ProfileCreate',
         component: Profile,
-        meta: { requiresAuth: true , allowedGroups: ['admin', 'supervisor','data_entry']}
+        meta: { requiresAuth: true ,requireProfile: false, allowedGroups: ['admin', 'supervisor','data_entry']}
       },
       {
         path: '/users',
         name: 'Users',
         component: Admins,
-        meta: { requiresAuth: true ,requireProfile: true, allowedGroups: ['admin'] }
+        meta: { requiresAuth: true ,requireProfile: false, allowedGroups: ['admin'] }
       },
     ],
   });
@@ -127,8 +127,14 @@ router.beforeEach(async (to, from, next) => {
         next('/login');
     }
     else if(to.meta.requireProfile&&!hasProfile){
-      console.log(!hasProfile)
+       authStore.getProfile()
+      if(authStore.profile !== null)
+      {
+        next()
+      }else{
       next('/profile/create');
+
+      }
     }
      else if (to.meta.requiresUnauthenticated && isAuthenticated) {
         // Redirect authenticated users trying to access unauthenticated routes

@@ -57,7 +57,7 @@ onMounted(async () => {
 });
 </script>
 <template>
-<div class="container p-3">
+<div class="container p-3 rounded bg-white">
     <div class="d-flex flex-row justify-content-between">
         <h3>الفئات</h3>
         <a @click="openModal('add')" class='btn btn-primary'>أضافة فئة</a>

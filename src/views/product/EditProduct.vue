@@ -88,8 +88,8 @@ const productStore = useProductStore();
 <template>
     <div v-if="productDataStore.loading||productStore.loading">Loading...</div>
     <div v-if="productDataStore.error||productStore.loading">{{ productDataStore.error }}</div>
-    <div v-if="!productDataStore.loading && !productDataStore.error&&!productStore.loading" class="container my-3">
-    <h2 class="text-center mb-4">تعديل المنتج</h2>
+    <div v-if="!productDataStore.loading && !productDataStore.error&&!productStore.loading" class="container rounded p-3 bg-white my-3">
+    <h2 class="text-center mb-4 ">تعديل المنتج</h2>
     <form class="row " @submit.prevent="handleAddProduct">
         <div class="col-3 d-flex flex-column justify-content-start align-items-center">
             <input

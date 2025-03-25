@@ -47,11 +47,11 @@ export const useUserStore = defineStore('user', {
       }
     },
     async changeGroup(user_id,form) {
-      this.loading = true;
+      this.loadingoperation = true;
       this.error = null;
       try {
 
-        const response = await axiosInstance.put('/api/admins/edit/'+user_id+'/',form); 
+        const response = await axiosInstance.put('/api/admins/change/'+user_id+'/',form); 
         console.log(response.data)
         const itemToUpdate = this.users.find((item) => item.id === response.data.data.id); // Find the item
         if (itemToUpdate) {
@@ -61,22 +61,19 @@ export const useUserStore = defineStore('user', {
         console.log(err);
         this.error = 'Failed to load products.';
       } finally {
-        this.loading = false;
+        this.loadingoperation = false;
       }
     },
     async removeFromGroup(user_id) {
-      this.loading = true;
-      this.error = null;
+      
       try {
 
         const response = await axiosInstance.delete('/api/admins/remove/'+user_id+'/'); 
         console.log(response.data)
-        this.user = this.users.filter((item) => item.id !== user_id);
+        this.users = this.users.filter((item) => item.id !== user_id);
       } catch (err) {
         console.log(err);
-        this.error = 'Failed to load products.';
-      } finally {
-        this.loading = false;
+        throw new Error("خطأ في حذف المستخدم")
       }
     },
   },

@@ -12,7 +12,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <main class="container p-3 ">
+    <main class="container p-3  bg-white">
         <div v-if="dashboardStore.loading">
             <div class="d-flex justify-content-center align-items-center">
         <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
@@ -23,7 +23,7 @@ onMounted(async () => {
     <div v-if="dashboardStore.error">{{ dashboardStore.error }}</div>
         <div v-if="!dashboardStore.loading && !dashboardStore.error">
         <div class="row">
-            <div class="col-4">
+            <div class="col-4 ">
                 <StatsCard :name="`اجمالي المبيعات`" :value="dashboardStore.stats.total_revenue?.toString()" :ispadge="false" :icon="`pi pi-dollar`" ></StatsCard>
             </div>
             <div class="col-4">

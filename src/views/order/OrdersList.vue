@@ -28,7 +28,7 @@ onMounted(async () => {
 </script>
 
 <template>
-<div class="container p-3">
+<div class="container p-3 rounded bg-white">
 <div class="d-flex flex-row justify-content-between">
         <h3>الطلبات</h3>
     </div>

@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref, computed } from 'vue';
 import ProductCard from '@/components/ProductCard.vue';
+import ProductCard2 from '@/components/product/ProductCard2.vue';
 // {id:1,name:"Product name 1",img:img1,  offer:0,price:1500,description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus leo est, dictum et vehicula a, fermentum posuere sem. Duis sed eleifend leo. Nullam ac enim ut arcu aliquam viverra nec eget elit. Praesent interdum turpis sapien, id aliquam justo commodo sed. Praesent convallis, risus sit amet fringilla dapibus, lorem purus pulvinar nisl, eu gravida erat nulla id orci. Mauris aliquam elit massa. Curabitur lobortis lectus sit amet libero porta tristique. Pellentesque nisi ligula, pulvinar nec tincidunt at, mollis non nibh. Nulla fermentum, lorem eget facilisis hendrerit, nisi libero bibendum nunc, a gravida elit massa non lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam euismod, enim id auctor accumsan, nulla tortor laoreet purus, sit amet semper ipsum sem a mauris. Aenean gravida lacinia malesuada. Phasellus eget iaculis elit, vitae mollis orci. Sed placerat massa sit amet eros pulvinar, ac eleifend odio tincidunt."},
 import { useProductStore } from '@/stores/product';
 import { onMounted } from 'vue';
@@ -28,7 +29,7 @@ onMounted(async () => {
 </script>
 <template>
    
-<div   class="container p-3">
+<div   class="container p-3 rounded bg-white">
     <div class="d-flex flex-row justify-content-between">
         <h3>المنتجات</h3>
         <RouterLink :to="`/products/create`" class='btn btn-primary'>اضافة منتج</RouterLink>
@@ -75,22 +76,11 @@ onMounted(async () => {
       </div>
     </div>
     <div v-if="productStore.error">{{ productStore.error }}</div>
-        <div v-if="!productStore.loading && !productStore.error" class="border table-responsive rounded p-1">
-                <table class="table ">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">الصورة</th>
-                            <th scope="col">الاسم </th>
-                            <th scope="col">الوصف</th>
-                            <th scope="col">السعر </th>
-                            <th scope="col">السعر المخفظ </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ProductCard v-for="product in productStore.products" :key="product.id" :product="product"/>
-                    </tbody>
-                </table>
+        <div v-if="!productStore.loading && !productStore.error" class=" row rounded p-1">
+               
+                    
+                <ProductCard2 v-for="product in productStore.products" :key="product.id" :product="product"/>
+                    
                 <div class="d-flex flex-row justify-content-center align-items-center">
                     <button @click="handleProductsPages('previous')" :disabled="!productStore.pagination.previous" class="btn btn-primary mx-1">السابق</button>
                     <button @click="handleProductsPages('next')" :disabled="!productStore.pagination.next" class="btn btn-primary mx-1">التالي</button>
