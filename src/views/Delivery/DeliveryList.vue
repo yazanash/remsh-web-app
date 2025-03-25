@@ -9,7 +9,23 @@ const form = reactive({
     name: '',
     address: '',
 });
+const error = reactive({
+  message: '',
+});
+const errors = reactive({
+  name: null,
+  address: null,
+});
 
+const validateForm = () => {
+  errors.name = !form.name || form.name.trim() === ""
+    ? "هذا الحقل مطلوب" 
+    : null;
+    errors.address = !form.address || form.address.trim() === ""
+    ? "هذا الحقل مطلوب" 
+    : null;
+  return !errors.name||!errors.address; // Return true if no errors
+};
 const isEditing = reactive({ value: false });
 const openModal = (mode, delivery = null) => {
   isEditing.value = mode === "edit";
@@ -27,7 +43,9 @@ const openModal = (mode, delivery = null) => {
 };
 
 const handleSubmit = async() => {
-  if (isEditing.value && form.id) {
+  try{
+    if(validateForm()){
+      if (isEditing.value && form.id) {
     await deliveryStore.editDelivery(form.id,form);
   }
   else{
@@ -38,13 +56,20 @@ const handleSubmit = async() => {
     form.address = "";
   const modal = bootstrap.Modal.getInstance(document.getElementById("categoryModal"));
   modal.hide();
+    }
+ 
+}catch(err){
+  error.message = err.message;
+    console.error(err);
+}
+
 };
 onMounted(async () => {
   await deliveryStore.fetchDelivery(); 
 });
 </script>
 <template>
-<div class="container p-3">
+<div class="container p-3 rounded bg-white">
     <div class="d-flex flex-row justify-content-between">
         <h3>مكاتب الشحن</h3>
         <a @click="openModal('add')" class='btn btn-primary'>اضافة مكتب</a>
@@ -64,10 +89,17 @@ onMounted(async () => {
               <div class="mb-3">
                 <label for="name" class="form-label">اسم المكتب</label>
                 <input type="text" class="form-control" id="name" v-model="form.name" required>
+                <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
+
               </div>
               <div class="mb-3">
                 <label for="address" class="form-label">العنوان</label>
                 <input type="text" class="form-control" id="address" v-model="form.address" required>
+                <span v-if="errors.address" class="text-danger">{{ errors.address }}</span>
+
+              </div>
+              <div class="mb-3">
+                  <strong class="text-danger text-center my-3">{{ error.message }}</strong>
               </div>
               <button type="submit" class="btn btn-primary">
                 <span v-if="deliveryStore.loadingoperation" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

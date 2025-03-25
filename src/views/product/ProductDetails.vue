@@ -1,38 +1,32 @@
 
 <script setup>
-
 import {ref,reactive,onMounted} from 'vue';
-
 import productItem from '@/components/product/productItem.vue'
 import { useRoute } from 'vue-router';
-
 import { useProductDataStore } from '@/stores/product_data';
-
 import ProductInfo from '@/components/product/ProductInfo.vue';
 import ProductImages from '@/components/product/ProductImages.vue';
+
 const router = useRoute();
 const productId = router.params.id;
 const productDataStore = useProductDataStore();
-
 
 const item_form = reactive({
     size:'',
     color:'',
 });
-
-
-
-
+const error = reactive({
+  message: '',
+});
 const handleAddItem = async () => {
   try {
     await productDataStore.addItem(productId,item_form);
     item_form.size = '';
   } catch (err) {
-    console.error('Error adding product:', err);
+    error.message = err.message;
+    console.error(err);;
   }
 };
-
-
 
 onMounted(async() => { 
   await productDataStore.fetchProductById(productId); // Fetch product info
@@ -48,11 +42,14 @@ onMounted(async() => {
       </div>
     </div>
 <div v-if="productDataStore.error">{{ productDataStore.error }}</div>
-    <main v-if="!productDataStore.loading && !productDataStore.error" class="container p-3 ">
+    <main v-if="!productDataStore.loading && !productDataStore.error" class="container p-3 rounded bg-white">
+        <div class="d-flex flex-row justify-content-between mb-3">
+                <h3>معلومات المنتج</h3>
+            </div>
         <ProductInfo :info="productDataStore.product?.info"/>
         <ProductImages :id="productDataStore.product?.info.id" :images="productDataStore.product?.images"/>
     
-        <div class="row">
+        <section>
             <div class="d-flex flex-row justify-content-between">
                 <h3>القياسات و الالوان</h3>
             </div>
@@ -64,10 +61,10 @@ onMounted(async() => {
 
                     </div>
                 </div>
-                <div class="col-7">
+                <div class="col-4">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="inputGroup-default">القياس</span>
-                        <input type="text" v-model="item_form.size" class="form-control" id="size" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        <input type="text" v-model="item_form.size" class="form-control" id="size" aria-label="Sizing example input" required aria-describedby="inputGroup-sizing-default">
                     </div>
                 </div>
                 <div class="col">
@@ -75,6 +72,9 @@ onMounted(async() => {
                         <span v-if="productDataStore.itemloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         اضافة
                     </button>
+                </div>
+                <div class="mb-3">
+                    <strong class="text-danger text-center my-3">{{ error.message }}</strong>
                 </div>
             </form>
                 <div class="col-md-12 col-sm-12">
@@ -85,8 +85,7 @@ onMounted(async() => {
                             <th scope="col">#</th>
                             <th scope="col">القياس</th>
                             <th scope="col">اللون</th>
-                            <th scope="col">الحالة ( متوفر / غير متوفر)</th>
-                            <th scope="col">Actions</th>
+                            <th scope="col">عمليات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -96,6 +95,6 @@ onMounted(async() => {
             </div>
             </div>
             
-        </div>
+        </section>
       </main>
 </template>

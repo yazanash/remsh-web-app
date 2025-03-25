@@ -20,7 +20,7 @@ export const useCategoryStore = defineStore('category', {
         console.log( response.data)
       } catch (err) {
         console.log(err);
-        this.error = 'Failed to load products.';
+        this.error = 'خطأ في تحميل الفئات';
       } finally {
         this.loading = false;
       }
@@ -33,8 +33,10 @@ export const useCategoryStore = defineStore('category', {
           console.log(response.data)
           this.categories.push(response.data.data);
         } catch (err) {
-          console.error(err);
-          this.error = 'Failed to add the image.';
+          if(error.response.status===400){
+            console.log(error.response.status)
+            throw new Error("خطأ في البيانات");
+          }
         } finally {
           this.loadingoperation = false;
         }
@@ -50,8 +52,9 @@ export const useCategoryStore = defineStore('category', {
             itemToUpdate.name = response.data.data.name; // Update its property
           }
         } catch (err) {
-          console.log(err);
-          this.error = 'Failed to add the image.';
+          if(error.response.status===400){
+            console.log(error.response.status)
+            throw new Error("خطأ في البيانات");}
         } finally {
           this.loadingoperation = false;
         }

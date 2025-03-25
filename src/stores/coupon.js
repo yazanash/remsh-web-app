@@ -19,7 +19,7 @@ export const useCouponStore = defineStore('coupon', {
         console.log( response.data)
       } catch (err) {
         console.log(err);
-        this.error = 'Failed to load products.';
+        this.error = 'خطأ في تحميل الكوبونات';
       } finally {
         this.loading = false;
       }
@@ -34,8 +34,9 @@ export const useCouponStore = defineStore('coupon', {
           console.log(response.data)
           this.coupons.push(response.data.data);
         } catch (err) {
-          console.error(err);
-          this.error = 'Failed to add the image.';
+          if(error.response.status===400){
+            console.log(error.response.status)
+            throw new Error("خطأ في البيانات");}
         } finally {
           this.loadingoperation = false;
         }
@@ -56,8 +57,9 @@ export const useCouponStore = defineStore('coupon', {
             itemToUpdate.count = response.data.data.count;
           }
         } catch (err) {
-          console.log(err);
-          this.error = 'Failed to add the image.';
+          if(error.response.status===400){
+            console.log(error.response.status)
+            throw new Error("خطأ في البيانات");}
         } finally {
           this.loadingoperation = false;
         }
@@ -69,8 +71,8 @@ export const useCouponStore = defineStore('coupon', {
           const response = await axiosInstance.delete('/api/coupons/'+coupon_id+'/delete/');
           this.coupons = this.coupons.filter((item) => item.id !== coupon_id);
         } catch (err) {
-          console.log(err);
-          this.error = 'Failed to add the image.';
+          if(error.response.status===404){
+            throw new Error("هذا المنتج غير موجود");}
         } finally {
           this.loadingdelete = false;
         }

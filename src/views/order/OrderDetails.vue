@@ -47,7 +47,7 @@ onMounted(async() => {
     console.log("mounted")
   await orderStore.fetchOrderById(orderId); 
   form.status=orderStore.order?.status
-  form.status=orderStore.order?.message
+  form.message=orderStore.order?.message
 });
 
 
@@ -55,14 +55,14 @@ onMounted(async() => {
 
 <template>
     <div v-if="orderStore.loading">
-      <div class="d-flex justify-content-center align-items-center">
+      <div class="d-flex justify-content-center align-items-center  bg-white">
         <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       </div>
     </div>
     <div v-if="orderStore.error">{{ orderStore.error }}</div>
-        <main v-if="!orderStore.loading && !orderStore.error" class="container p-3 ">
+        <main v-if="!orderStore.loading && !orderStore.error" class="container p-3 rounded bg-white">
         <div class="row mb-3">
             <div class="col-md-12 card mb-3">
                 <div class="row g-0">

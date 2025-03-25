@@ -1,5 +1,5 @@
 <script setup>
-import logo from '@/assets/logo1.png';
+import logo from '@/assets/app_logo.png';
 import { computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import router from "@/router";
@@ -43,11 +43,10 @@ const handleLogout=()=>{
 </script>
 
 <template>
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark " style="background-color: #1E293B;">
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark " style="background-color: #560606;">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
-      <img :src="logo" alt="" width="30" height="24" class="d-inline-block align-text-top">
-      تطبيق رمش
+      <img :src="logo" alt="" width="50" height="44" class="d-inline-block align-text-top">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -65,9 +64,3 @@ const handleLogout=()=>{
   </div>
 </nav>
 </template>
-
-<style scoped>
-body {
-  background-color: #fbfbfb;
-}
-</style>

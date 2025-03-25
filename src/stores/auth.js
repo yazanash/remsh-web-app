@@ -8,12 +8,13 @@ export const useAuthStore = defineStore('auth', {
     refresh: null,
     group: null,
     profile: null,
-    registerErroMessage:''
+    registerErroMessage:'',
+    operation_loading: false
   }),
   actions: {
     async register(email, password,password2) {
       try{
-
+        this.operation_loading = true;
       const response = await axiosInstance.post('/api/signup/', { email, password, password2 });
       this.access = response.data.access;
       this.refresh = response.data.refresh;
@@ -25,13 +26,17 @@ export const useAuthStore = defineStore('auth', {
       catch(error){
         
         if(error.response.status===400){
-          console.log(error.response.status)
-          throw new Error("خطأ في البيانات");
+          console.log(error.response)
+          throw new Error("خطأ في اسم المستخدم او كلمة المرور ");
         }
+      }
+      finally{
+        this.operation_loading = false;
       }
     },
     async login(email, password) {
       try{
+        this.operation_loading = true;
         const response = await axiosInstance.post('/api/login/', { email, password });
         
         this.access = response.data.access;
@@ -48,6 +53,9 @@ export const useAuthStore = defineStore('auth', {
         throw new Error("خطأ في البيانات");
       }
     }
+    finally{
+      this.operation_loading = false;
+    }
     },
     async verifyToken() {
       try {
@@ -62,6 +70,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await axiosInstance.post('/api/token/access/', { refresh: this.refresh });
         this.access = response.data.access;
+        console.log(response.data.access)
         localStorage.setItem('access', this.access);
       } catch (error) {
         console.error('Failed to refresh token:', error);
@@ -73,7 +82,8 @@ export const useAuthStore = defineStore('auth', {
         console.log(response.data)
         this.profile = response.data.data;
       } catch (error) {
-        console.log('Failed to refresh token:');
+        console.log(response.data)
+        console.log('Failed to get profile:');
       }
     },
     async setProfile(form) {

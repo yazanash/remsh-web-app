@@ -10,15 +10,37 @@ const form = reactive({
     phone:"",
     birthdate:""
 });
-
+const errors = reactive({
+  email: null,
+  password: null,
+});
+const error = reactive({
+  message: '',
+});
+const validateForm = () => {
+  errors.name = !form.name
+    ? "هذا الحقل مطلوب"
+    : null;
+    errors.phone = !form.phone
+    ? "هذا الحقل مطلوب"
+    : null;
+  return !errors.phone && !errors.name; // Return true if no errors
+};
 const handleSubmit =async () => {
-    await authStore.setProfile(form)
-    router.push('/');
+  try{
+    if(validateForm()){
+      await authStore.setProfile(form)
+      router.push('/');
+    }
+  }catch(err){
+    error.message=err.message
+  }
+   
 };
 </script>
 
 <template>
-    <div class="container d-flex justify-content-center align-items-center flex-column my-3 ">
+    <div class="container p-3 bg-white rounded d-flex justify-content-center align-items-center flex-column my-3 ">
     <h2 class="mb-4  row">الصفحة الشخصية</h2>
     <div class="col-md-6 col-sm-12">
 
@@ -26,10 +48,12 @@ const handleSubmit =async () => {
       <div class="col-md-12">
         <label for="inputEmail4" class="form-label">الاسم</label>
         <input v-model="form.name" type="text" class="form-control" id="inputEmail4">
+        <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
       </div>
       <div class="col-md-12">
         <label for="inputPassword4" class="form-label">رقم الهاتف</label>
         <input type="tel" v-model="form.phone" class="form-control" id="inputPassword4">
+        <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
       </div>
           <div class="col-12">
             <label for="inputEmail4" class="form-label">الجنس</label>
@@ -52,6 +76,9 @@ const handleSubmit =async () => {
             <div class="col-md-12">
               <label for="inputPassword4" class="form-label">تاريخ الميلاد</label>
               <input type="date" v-model="form.birthdate" class="form-control" id="inputPassword4">
+            </div>
+            <div class="mb-3">
+                <strong v-if="error.message" class="text-danger">{{ error.message }}</strong>
             </div>
             <div class="col-12">
               <button type="submit" class="btn btn-primary float-end">حفظ</button>

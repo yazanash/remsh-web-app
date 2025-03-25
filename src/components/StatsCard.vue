@@ -41,7 +41,7 @@ const getBadgeClass=(status) => {
 </script>
 
 <template>
-      <div class="col-md col-sm border rounded my-2 p-3">
+      <div class="col-md col-sm border rounded my-2 p-3 bg-white">
                         <div class="row align-items-center">
                         <div class="col-8">
                             <div class="d-flex align-items-center">
