@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:8000', // Use '/api' to take advantage of the Vite proxy
+  baseURL: 'https://e-remsh.vercel.app', // Use '/api' to take advantage of the Vite proxy
 });
 axiosInstance.interceptors.request.use((config) => {
   const authStore = useAuthStore();

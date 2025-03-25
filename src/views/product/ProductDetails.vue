@@ -85,8 +85,7 @@ onMounted(async() => {
                             <th scope="col">#</th>
                             <th scope="col">القياس</th>
                             <th scope="col">اللون</th>
-                            <th scope="col">الحالة ( متوفر / غير متوفر)</th>
-                            <th scope="col">Actions</th>
+                            <th scope="col">عمليات</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -9,6 +9,7 @@ export const useProductDataStore = defineStore('product_data', {
     imagedeleteloading: false,
     itemdeleteloading:false,
     itemloading: false,
+    itemchangeloading: false,
     error: null, // For error messages
   }),
   actions: {
@@ -108,6 +109,24 @@ async addItem(product_id,formData) {
       throw new Error("خطأ في البيانات");}
   } finally {
     this.itemloading = false;
+  }
+},
+async activateItem(item_id,status_bool) {
+  this.itemchangeloading = true;
+  this.error = null;
+  try {
+    const response = await axiosInstance.put('/api/products/items/change/'+item_id+'/', {status:status_bool});
+    console.log(response.data)
+    const itemToUpdate = this.product.items.find((item) => item.id === response.data.data.id);
+    if (itemToUpdate) {
+      itemToUpdate.is_active = response.data.data.status; // Update its property
+    }
+  } catch (err) {
+    if(error.response.status===400){
+      console.log(error.response.status)
+      throw new Error("خطأ في البيانات");}
+  } finally {
+    this.itemchangeloading = false;
   }
 },
 async deleteItem(item_id) {

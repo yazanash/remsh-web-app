@@ -44,8 +44,8 @@ const login = async () => {
 <template>
    
     <div class="text-center">
-      <form class="form-signin" @submit.prevent="login">
-      <img class="mb-4" :src="logo" alt="" width="72" height="72">
+      <form class="form-signin bg-white border rounded shadow" @submit.prevent="login">
+      <img style="background-color: #560606;" class="mb-4 img-thumbnail" :src="logo" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">اهلا بعودتك</h1>
       <!-- <label for="inputEmail" class="sr-only">Email address</label> -->
       <input type="email" id="inputEmail" v-model="form.email" class="form-control mb-3 text-start" placeholder="البريد الالكتروني" required autofocus="">
@@ -59,6 +59,8 @@ const login = async () => {
         <span v-if="authStore.operation_loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         تسجيل دخول
       </button>
+      <p class="mt-5 mb-3 text-muted">ليس لديك حساب ؟ <RouterLink class="text-primary" :to="`/signup`">سجل الان</RouterLink></p>
+
       <p class="mt-5 mb-3 text-muted">Trioverse 2025 ©</p>
     </form>
     </div>

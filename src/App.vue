@@ -26,7 +26,7 @@ if (authStore.access) {
   <!-- <Navbar/> -->
   <div class="container-fluid p-0 d-flex h-100">
     
-      <Sidebar/>
+      <Sidebar v-if="authStore.access"/>
 
       <div class="container-fluid mx-1 my-2"> 
         <RouterView />

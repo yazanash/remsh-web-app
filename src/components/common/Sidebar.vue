@@ -86,6 +86,11 @@ const handleLogout=()=>{
             <i :class="navigation.icon"></i> {{ navigation.name }} <i class="pi pi-arrow"></i>
           </RouterLink>
         </li>
+        <li class="nav-item bg-white rounded mb-2">
+          <a @click="handleLogout" href="#" class="nav-link" style="color: #560606;">
+            <i class="pi pi-sign-out"></i> تسجيل خروج 
+          </a>
+        </li>
       </ul>
       <hr />
 
