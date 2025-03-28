@@ -53,19 +53,31 @@ const handleLogout=()=>{
 <template>
    <div >
   <!-- Menu Button -->
+  <div class="navbar fixed-top mb-5 d-flex flex-row navbar-light bg-white border-bottom-1 shadow">
    <button 
-    class="btn btn-primary d-lg-none menu-btn" 
+    class="btn btn-primary mx-2 " 
     @click="toggleSidebar">
     <i class="pi pi-bars"></i>
   </button>
+</div>
+  
   
   <div 
     :class="['sidebar', { 'slide-in': isSidebarVisible }]" 
     id="sidebar"  >
+    
     <div
       class="d-flex flex-column border-2 border-end flex-shrink-0 p-3 h-100 vh-100 sticky-top bg-light rounded-start rounded-2 "
       style="width: 270px; background-color: #fff !important"
     >
+    <div class="d-flex flex-row-reverse">
+      <button 
+    class="btn btn-primary d-lg-none d-inline " 
+    @click="toggleSidebar">
+    <i class="pi pi-times"></i>
+  </button>
+    </div>
+   
       <!-- Sidebar Header -->
       <a class="navbar-brand" href="#">
         <img :src="logo" alt="" style="background-color: #560606;" width="40" height="34" class="d-inline-block align-text-top rounded">

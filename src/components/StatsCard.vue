@@ -43,7 +43,7 @@ const getBadgeClass=(status) => {
 <template>
       <div class="col-md col-sm border rounded my-2 p-3 bg-white">
                         <div class="row align-items-center">
-                        <div class="col-8">
+                        <div class="col-md-8 col-sm-12">
                             <div class="d-flex align-items-center">
                             <div>
                                
@@ -63,7 +63,7 @@ const getBadgeClass=(status) => {
                             </div>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-md-4 col-sm-12 p-2">
                             <h6 class="fs-7 d-flex align-items-center justify-content-end m-0">
                                     <span v-if="props.ispadge===false"  class="bg-primary-subtle text-primary rounded-2 py-1 px-2">{{props.value}}</span>
                                     <span v-else  :class="getBadgeClass(props.name)" class=" rounded-2 py-1 px-2">{{props.value}}</span>

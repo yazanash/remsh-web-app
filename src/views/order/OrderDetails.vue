@@ -1,7 +1,7 @@
 
 <script setup>
 import OrderProductItem from '@/components/order/OrderProductItem.vue'
-
+import OrderProductItemCard from '@/components/order/OrderProductItemCard.vue';
 import {ref,reactive,onMounted} from 'vue';
 import { useRoute } from 'vue-router';
 import { useOrderStore } from '@/stores/order';
@@ -121,11 +121,11 @@ onMounted(async() => {
                 </div>
             </form>
             <div class="col-md-12 col-sm-12">
-                <div class="border table-responsive rounded p-1">
-                <table class="table ">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
+                <div class="border row rounded p-1">
+                <!-- <table class="table "> -->
+                    <!-- <thead>
+                        <tr> -->
+                            <!-- <th scope="col">#</th>
                             <th scope="col">الصورة</th>
                             <th scope="col">اسم المنتج </th>
                             <th scope="col">القياس</th>
@@ -133,13 +133,13 @@ onMounted(async() => {
                             <th scope="col">السعر </th>
                             <th scope="col">السعر المخفض </th>
                             <th scope="col">الكمية</th>
-                            <th scope="col">الاجمالي</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <OrderProductItem v-for="item in orderStore.order?.order_items" :key="item.id" :item="item"></OrderProductItem>
-                    </tbody>
-                </table>
+                            <th scope="col">الاجمالي</th> -->
+                        <!-- </tr> -->
+                    <!-- </thead> -->
+                    <!-- <tbody> -->
+                        <OrderProductItemCard v-for="item in orderStore.order?.order_items" :key="item.id" :item="item"></OrderProductItemCard>
+                    <!-- </tbody> -->
+                <!-- </table> -->
             </div>
             </div>
             

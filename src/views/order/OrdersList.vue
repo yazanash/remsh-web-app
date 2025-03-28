@@ -1,5 +1,6 @@
 <script setup>
 import OrderItem from '@/components/order/OrderItem.vue';
+import OrderCard from '@/components/order/OrderCard.vue';
 import { reactive, ref, computed } from 'vue';
 import { onMounted } from 'vue';
 import { useOrderStore } from '@/stores/order';
@@ -35,7 +36,7 @@ onMounted(async () => {
     
 <hr/>
     <form @submit.prevent="handleProductsFilter" class="row g-3 my-1">
-        <div class="col-4 ">
+        <div class="col-md-4 ">
                 <div class="input-group">
                     <div class="input-group-text"><i class="pi pi-filter"></i></div>
                     <select v-model="form.status" class="form-select" aria-label="Default select example">
@@ -49,7 +50,7 @@ onMounted(async () => {
                 </div>
               
         </div>
-        <div class="col-6">
+        <div class="col-md-6">
             <div class="d-flex">
                 <div class="input-group mb-3">
                     <input class="form-control" v-model="form.search" type="search" placeholder="Search" aria-label="Search">
@@ -75,10 +76,10 @@ onMounted(async () => {
     <div v-if="orderStore.error">{{ orderStore.error }}</div>
 <div v-if="!orderStore.loading && !orderStore.error"  class="row">
             <div class="col-md-12 col-sm-12">
-                <div class="border table-responsive rounded p-1">
+                <div class="border rounded p-1 ">
                     
-                <table class="table ">
-                    <thead>
+                <!-- <table class="table "> -->
+                    <!-- <thead>
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">اسم الزبون</th>
@@ -87,11 +88,11 @@ onMounted(async () => {
                             <th scope="col">عدد القطع</th>
                             <th scope="col">الاجمالي</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <OrderItem v-for="order in orderStore.orders" :key="order.id" :order="order"/>
-                    </tbody>
-                </table>
+                    </thead> -->
+                    <!-- <tbody> -->
+                        <OrderCard v-for="order in orderStore.orders" :key="order.id" :order="order"/>
+                    <!-- </tbody> -->
+                <!-- </table> -->
                 <div class="d-flex flex-row justify-content-center align-items-center">
                     <button @click="handleOrderssPages('previous')" :disabled="!orderStore.pagination.previous" class="btn btn-primary mx-1">السابق</button>
                     <button @click="handleOrderssPages('next')" :disabled="!orderStore.pagination.next" class="btn btn-primary mx-1">التالي</button>
