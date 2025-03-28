@@ -28,7 +28,7 @@ if (authStore.access) {
     
       <Sidebar v-if="authStore.access"/>
 
-      <div class="container-fluid mx-1 my-2"> 
+      <div class="container-fluid mx-1 my-2" style="padding-top: 4rem;"> 
         <RouterView />
       </div>
   </div>

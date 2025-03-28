@@ -38,7 +38,7 @@ onMounted(async () => {
 <hr/>
 
     <form @submit.prevent="handleProductsFilter" class="row g-3 my-1">
-        <div class="col-4 ">
+        <div class="col-md-4 ">
                 <div class="input-group">
                     <div class="input-group-text"><i class="pi pi-filter"></i></div>
                     <select  v-model="form.category" class="form-select" aria-label="Default select example">
@@ -52,7 +52,7 @@ onMounted(async () => {
                 </div>
               
         </div>
-        <div class="col-6">
+        <div class="col-md-6">
             <div class="d-flex">
                 <div class="input-group mb-3">
                     <input  v-model="form.search" class="form-control" type="search" placeholder="Search" aria-label="Search">
@@ -60,7 +60,7 @@ onMounted(async () => {
                 </div>
             </div>
         </div>
-        <div class="col-2">
+        <div class="col-md-2">
             <div class="d-flex">
                 <div class="input-group mb-3">
                      <a class="btn btn-primary" @click="handleClear" :class="{'disabled':!form.category&&!form.search}" type="submit">Clear</a>

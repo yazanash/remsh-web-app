@@ -9,13 +9,13 @@ const props = defineProps({
 
 <template>
   <div class="row mb-3">
-            <div class="col-3">
+            <div class="col-md-3">
                 <div class="card " >
                     <img :src="info?.thumbnail" class="card-img-top" alt="...">
                     
                 </div>
             </div>
-       <div class="col">
+       <div class="col-md">
 
       
         <section class="mb-3">
